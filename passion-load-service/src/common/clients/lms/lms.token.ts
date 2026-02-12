@@ -1,0 +1,1 @@
+export const LMS_CLIENT = 'LMS_CLIENT';
