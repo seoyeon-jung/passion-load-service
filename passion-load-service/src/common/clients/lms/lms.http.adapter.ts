@@ -22,14 +22,14 @@ export class LmsHttpAdapter implements LmsClient {
 
   async getTeachersByOrganization(orgId: string): Promise<LmsTeacher[]> {
     const { data } = await this.http.get<LmsListResponse<LmsTeacher>>(
-      `/organizations/${orgId}/teachers`,
+      `/organizations/${orgId}/teachers`
     );
     return data.items ?? [];
   }
 
   async getStudentsByOrganization(orgId: string): Promise<LmsStudent[]> {
     const { data } = await this.http.get<LmsListResponse<LmsStudent>>(
-      `/organizations/${orgId}/students`,
+      `/organizations/${orgId}/students`
     );
     return data.items ?? [];
   }
