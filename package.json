@@ -2,7 +2,12 @@
   "name": "@org/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "buil": "nx build",
+    "postinstall": "prisma generate --config=prisma.config.ts",
+    "prisma:generate": "prisma generate --config=prisma.config.ts",
+    "prisma:copy-runtime": "node tools/scripts/copy-prisma-runtime.js"
+  },
   "private": true,
   "devDependencies": {
     "@nestjs/schematics": "^11.0.0",
@@ -17,9 +22,10 @@
     "@swc/helpers": "~0.5.18",
     "@types/jest": "^30.0.0",
     "@types/node": "20.19.9",
+    "@types/pg": "^8.16.0",
+    "copy-webpack-plugin": "^13.0.1",
     "nx": "22.4.5",
     "prettier": "^2.6.2",
-    "prisma": "^7.4.0",
     "tslib": "^2.3.0",
     "typescript": "~5.9.2",
     "webpack-cli": "^5.1.4"
@@ -33,10 +39,11 @@
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
-    "@prisma/client": "^7.4.0",
+    "@prisma/adapter-pg": "^7.4.0",
     "axios": "^1.6.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
+    "pg": "^8.18.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0"
   }
