@@ -1,10 +1,10 @@
 export type Feedback = {
-    id: string;
-    orgId: string;
-    submissionId: string;
-    teacherId: string;
+  id: string;
+  orgId: string;
+  submissionId: string;
+  teacherId: string;
 
-    content: string;
+  content: string;
 
-    createdAt: Date;
-}
+  createdAt: Date;
+};

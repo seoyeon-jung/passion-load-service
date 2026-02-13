@@ -1,14 +1,14 @@
-import { SessionStatus } from "@prisma/client";
+import { SessionStatus } from '@prisma/client';
 
 export type Session = {
-    id: string;
-    orgId: string;
+  id: string;
+  orgId: string;
 
-    title: string;
-    date: string; // yyyy-mm-dd
+  title: string;
+  date: string; // yyyy-mm-dd
 
-    status: SessionStatus;
-    
-    createdAt: Date;
-    updatedAt: Date;
-}
+  status: SessionStatus;
+
+  createdAt: Date;
+  updatedAt: Date;
+};
