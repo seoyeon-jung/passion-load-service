@@ -1,4 +1,4 @@
-import { SessionStatus } from '@prisma/client';
+import { SessionStatus } from "../../common/types/enums";
 
 export type Session = {
   id: string;
