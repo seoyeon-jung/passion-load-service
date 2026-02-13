@@ -5,13 +5,16 @@ CREATE TYPE "SessionStatus" AS ENUM ('PLANNED', 'ACTIVE', 'DONE');
 CREATE TYPE "AssignmentType" AS ENUM ('TASK', 'DAILY_CHECK');
 
 -- CreateEnum
+CREATE TYPE "DailyAssignmentStatus" AS ENUM ('SCHEDULED', 'COMPLETED', 'INCOMPLETE');
+
+-- CreateEnum
 CREATE TYPE "SubmissionStatus" AS ENUM ('NOT_STARTED', 'IN_PROGRESS', 'DONE', 'HOLD');
 
 -- CreateTable
 CREATE TABLE "sessions" (
-    "id" TEXT NOT NULL,
-    "organization_id" TEXT NOT NULL,
-    "teacher_id" TEXT,
+    "id" UUID NOT NULL,
+    "organization_id" UUID NOT NULL,
+    "teacher_id" UUID,
     "title" TEXT NOT NULL,
     "session_date" TIMESTAMP(3) NOT NULL,
     "status" "SessionStatus" NOT NULL DEFAULT 'PLANNED',
@@ -23,14 +26,24 @@ CREATE TABLE "sessions" (
 
 -- CreateTable
 CREATE TABLE "daily_assignments" (
-    "id" TEXT NOT NULL,
-    "organization_id" TEXT NOT NULL,
-    "session_id" TEXT,
-    "student_id" TEXT NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
+    "id" UUID NOT NULL,
+    "organization_id" UUID NOT NULL,
+    "session_id" UUID,
+    "student_id" UUID NOT NULL,
+    "assignment_date" DATE NOT NULL,
     "assignment_type" "AssignmentType" NOT NULL,
     "title" TEXT,
-    "content" TEXT,
+    "body" TEXT,
+    "due_at" TIMESTAMP(3),
+    "status" "DailyAssignmentStatus" NOT NULL DEFAULT 'SCHEDULED',
+    "incompletion_reason" TEXT,
+    "subject" TEXT,
+    "category_type" TEXT,
+    "difficulty" TEXT,
+    "estimated_minutes" INTEGER,
+    "checked" BOOLEAN NOT NULL DEFAULT false,
+    "contact_made" BOOLEAN NOT NULL DEFAULT false,
+    "check_memo" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -39,10 +52,10 @@ CREATE TABLE "daily_assignments" (
 
 -- CreateTable
 CREATE TABLE "assignment_submissions" (
-    "id" TEXT NOT NULL,
-    "organization_id" TEXT NOT NULL,
-    "assignment_id" TEXT NOT NULL,
-    "student_id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "organization_id" UUID NOT NULL,
+    "assignment_id" UUID NOT NULL,
+    "student_id" UUID NOT NULL,
     "status" "SubmissionStatus" NOT NULL DEFAULT 'NOT_STARTED',
     "reason" TEXT,
     "schedule_note" TEXT,
@@ -54,10 +67,10 @@ CREATE TABLE "assignment_submissions" (
 
 -- CreateTable
 CREATE TABLE "feedbacks" (
-    "id" TEXT NOT NULL,
-    "organization_id" TEXT NOT NULL,
-    "student_id" TEXT NOT NULL,
-    "assignment_id" TEXT,
+    "id" UUID NOT NULL,
+    "organization_id" UUID NOT NULL,
+    "student_id" UUID NOT NULL,
+    "assignment_id" UUID,
     "content" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -89,10 +102,13 @@ CREATE INDEX "sessions_session_date_idx" ON "sessions"("session_date");
 CREATE INDEX "daily_assignments_organization_id_idx" ON "daily_assignments"("organization_id");
 
 -- CreateIndex
-CREATE INDEX "daily_assignments_student_id_date_idx" ON "daily_assignments"("student_id", "date");
+CREATE INDEX "daily_assignments_session_id_idx" ON "daily_assignments"("session_id");
 
 -- CreateIndex
-CREATE INDEX "daily_assignments_session_id_idx" ON "daily_assignments"("session_id");
+CREATE INDEX "daily_assignments_student_id_assignment_date_idx" ON "daily_assignments"("student_id", "assignment_date");
+
+-- CreateIndex
+CREATE INDEX "daily_assignments_assignment_type_assignment_date_idx" ON "daily_assignments"("assignment_type", "assignment_date");
 
 -- CreateIndex
 CREATE INDEX "assignment_submissions_organization_id_idx" ON "assignment_submissions"("organization_id");
