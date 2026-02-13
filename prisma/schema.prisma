@@ -31,18 +31,23 @@ enum SubmissionStatus {
 }
 
 model Session {
-  id             String        @id @default(uuid()) @db.Uuid
-  organizationId String        @map("organization_id") @db.Uuid
-  teacherId      String?       @map("teacher_id") @db.Uuid
-  title          String
-  sessionDate    DateTime      @map("session_date")
-  status         SessionStatus @default(PLANNED)
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
+  id             String @id @default(uuid()) @db.Uuid
+  organizationId String @map("organization_id") @db.Uuid
 
-  assignments    DailyAssignment[]
+  /// LMS 외부 ID일 가능성 → String 추천 (uuid 강제하면 위험)
+  teacherId String? @map("teacher_id")
+
+  title       String
+  sessionDate DateTime      @map("session_date")
+  status      SessionStatus @default(PLANNED)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  assignments DailyAssignment[]
 
   @@index([organizationId])
+  @@index([organizationId, sessionDate])
   @@index([sessionDate])
   @@map("sessions")
 }
@@ -52,7 +57,9 @@ model DailyAssignment {
 
   organizationId String  @map("organization_id") @db.Uuid
   sessionId      String? @map("session_id") @db.Uuid
-  studentId      String  @map("student_id") @db.Uuid
+
+  /// LMS 외부 ID일 가능성 → String 추천
+  studentId String @map("student_id")
 
   assignmentDate DateTime       @map("assignment_date") @db.Date
   assignmentType AssignmentType @map("assignment_type")
@@ -64,6 +71,7 @@ model DailyAssignment {
   status             DailyAssignmentStatus @default(SCHEDULED)
   incompletionReason String?               @map("incompletion_reason") @db.Text
 
+  // 선택 필드
   subject          String?
   categoryType     String? @map("category_type")
   difficulty       String?
@@ -83,60 +91,80 @@ model DailyAssignment {
   feedbacks   Feedback[]
 
   @@index([organizationId])
+  @@index([organizationId, assignmentDate])
   @@index([sessionId])
   @@index([studentId, assignmentDate])
   @@index([assignmentType, assignmentDate])
+  @@index([organizationId, studentId, assignmentDate])
   @@map("daily_assignments")
 }
 
 model AssignmentSubmission {
-  id             String           @id @default(uuid()) @db.Uuid
-  organizationId String           @map("organization_id") @db.Uuid
-  assignmentId   String           @map("assignment_id") @db.Uuid
-  studentId      String           @map("student_id") @db.Uuid
-  status         SubmissionStatus @default(NOT_STARTED)
-  reason         String?
-  scheduleNote   String?          @map("schedule_note")
-  createdAt      DateTime         @default(now()) @map("created_at")
-  updatedAt      DateTime         @updatedAt @map("updated_at")
+  id             String @id @default(uuid()) @db.Uuid
+  organizationId String @map("organization_id") @db.Uuid
+  assignmentId   String @map("assignment_id") @db.Uuid
+
+  /// LMS 외부 ID일 가능성 → String 추천
+  studentId String @map("student_id")
+
+  status       SubmissionStatus @default(NOT_STARTED)
+  reason       String?
+  scheduleNote String?          @map("schedule_note")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
 
   assignment DailyAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
 
-  @@unique([assignmentId, studentId])
+  @@unique([assignmentId, studentId]) // upsert 키
   @@index([organizationId])
+  @@index([organizationId, assignmentId])
   @@index([studentId])
   @@map("assignment_submissions")
 }
 
 model Feedback {
-  id             String   @id @default(uuid()) @db.Uuid
-  organizationId String   @map("organization_id") @db.Uuid
-  studentId      String   @map("student_id") @db.Uuid
-  assignmentId   String?  @map("assignment_id") @db.Uuid
-  content        String
-  createdAt      DateTime @default(now()) @map("created_at")
+  id             String @id @default(uuid()) @db.Uuid
+  organizationId String @map("organization_id") @db.Uuid
+
+  /// LMS 외부 ID일 가능성 → String 추천
+  studentId String @map("student_id")
+
+  assignmentId String?  @map("assignment_id") @db.Uuid
+  content      String // 250자 제한은 앱 레벨 검증
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   assignment DailyAssignment? @relation(fields: [assignmentId], references: [id], onDelete: SetNull)
 
   @@index([organizationId])
+  @@index([organizationId, studentId])
   @@index([studentId])
   @@index([assignmentId])
   @@map("feedbacks")
 }
 
 model Report {
-  id              String   @id @default(uuid())
-  organizationId  String   @map("organization_id")
-  createdBy       String?  @map("created_by")
-  fromDate        DateTime @map("from_date")
-  toDate          DateTime @map("to_date")
-  targetStudentId String?  @map("target_student_id")
-  url             String?
-  metadata        Json?
-  createdAt       DateTime @default(now()) @map("created_at")
+  id String @id @default(uuid()) @db.Uuid
+
+  organizationId String @map("organization_id") @db.Uuid
+
+  /// 작성자도 외부 사용자일 수 있음 → String
+  createdBy String? @map("created_by")
+
+  fromDate DateTime @map("from_date") @db.Date
+  toDate   DateTime @map("to_date") @db.Date
+
+  /// target도 외부 student ID일 수 있음 → String
+  targetStudentId String? @map("target_student_id")
+
+  url       String?
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@index([organizationId])
+  @@index([organizationId, fromDate, toDate])
   @@index([fromDate, toDate])
   @@index([targetStudentId])
+  @@index([organizationId, targetStudentId])
   @@map("reports")
 }
