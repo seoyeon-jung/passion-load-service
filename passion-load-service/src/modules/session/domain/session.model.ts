@@ -1,4 +1,4 @@
-import { SessionStatus } from "../../common/types/enums";
+import { SessionStatus } from "../../../common/types/enums";
 
 export type Session = {
   id: string;
@@ -7,7 +7,7 @@ export type Session = {
   title: string;
   date: string; // yyyy-mm-dd
 
-  status: SessionStatus;
+  status: SessionStatus ;
 
   createdAt: Date;
   updatedAt: Date;

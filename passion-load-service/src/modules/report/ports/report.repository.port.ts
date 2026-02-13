@@ -1,4 +1,4 @@
-import { Report } from "../report.model";
+import { Report } from "../domain/report.model";
 
 export type CreateReportInput = {
     id: string;

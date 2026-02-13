@@ -1,5 +1,5 @@
 import type { Feedback as PrismaFeedback } from '@prisma/client';
-import { Feedback } from '../../../feedback.model';
+import { Feedback } from '../../../domain/feedback.model';
 
 export const toDomainFeedback = (row: PrismaFeedback): Feedback => ({
   id: row.id,

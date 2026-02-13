@@ -1,4 +1,4 @@
-import type { Report } from "../../../report.model";
+import type { Report } from "../../../domain/report.model";
 import type { Report as PrismaReport } from "@prisma/client";
 
 export const toDomainReport = (row: PrismaReport): Report => ({

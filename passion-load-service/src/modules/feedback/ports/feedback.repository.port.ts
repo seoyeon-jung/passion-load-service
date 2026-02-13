@@ -1,4 +1,4 @@
-import { Feedback } from "../feedback.model";
+import { Feedback } from "../domain/feedback.model";
 
 export type CreateFeedbackInput = {
   id: string;
