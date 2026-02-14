@@ -6,10 +6,12 @@ import { OrgMiddleware } from '../common/middlewares/org.middleware';
 import { PrismaModule } from '../common/prisma/prisma.module';
 import { LmsDebugController } from '../lms-debug.controller';
 import { LmsModule } from '../common/clients/lms/lms.module';
+import { PersistenceModule } from '../modules/persistence.module';
+import { DebugController } from '../modules/debug.controller';
 
 @Module({
-  imports: [PrismaModule, LmsModule],
-  controllers: [AppController, HealthController, LmsDebugController],
+  imports: [PrismaModule, LmsModule, PersistenceModule],
+  controllers: [AppController, HealthController, LmsDebugController, DebugController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
