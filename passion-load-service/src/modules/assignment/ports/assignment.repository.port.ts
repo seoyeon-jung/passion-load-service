@@ -14,7 +14,7 @@ export type DailyAssignment = {
   title: string | null;
   body: string | null;
   dueAt: Date | null;
-  status: string;
+  status: DailyAssignmentStatus;
   incompletionReason: string | null;
 
   // 선택 필드
@@ -57,7 +57,7 @@ export type UpdateTaskInput = Partial<{
   title: string | null;
   body: string | null;
   dueAt: Date | null;
-  status: string;
+  status: DailyAssignmentStatus;
   incompletionReason: string | null;
 
   subject: string | null;
