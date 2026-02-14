@@ -6,7 +6,8 @@
     "buil": "nx build",
     "postinstall": "prisma generate --config=prisma.config.ts",
     "prisma:generate": "prisma generate --config=prisma.config.ts",
-    "prisma:copy-runtime": "node tools/scripts/copy-prisma-runtime.js"
+    "prisma:copy-runtime": "node tools/scripts/copy-prisma-runtime.js",
+    "dev:service": "npm run prisma:generate && nx serve @org/passion-load-service"
   },
   "private": true,
   "devDependencies": {
@@ -28,7 +29,8 @@
     "prettier": "^2.6.2",
     "tslib": "^2.3.0",
     "typescript": "~5.9.2",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "prisma": "^7.4.0"
   },
   "workspaces": [
     "packages/*",
