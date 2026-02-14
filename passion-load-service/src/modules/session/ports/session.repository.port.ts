@@ -1,15 +1,17 @@
-import { SessionStatus } from "../../../common/types/enums";
-import { Session } from "../domain/session.model";
+import { SessionStatus } from '../../../common/types/enums';
+import { Session } from '../domain/session.model';
 
 export type CreateSessionInput = {
   id: string;
   orgId: string;
   title: string;
   date: string;
-  status?: SessionStatus
-}
+  status?: SessionStatus;
+};
 
-export type UpdateSessionInput = Partial<Pick<Session, 'title' | 'date' | 'status'>>;
+export type UpdateSessionInput = Partial<
+  Pick<Session, 'title' | 'date' | 'status'>
+>;
 
 export interface SessionRepositoryPort {
   create(input: CreateSessionInput): Promise<Session>;

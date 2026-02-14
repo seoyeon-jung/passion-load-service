@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Inject, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 
 import {
   SESSION_REPOSITORY,
@@ -19,11 +27,15 @@ import { AssignmentType } from '../common/types/enums';
 @Controller('/debug')
 export class DebugController {
   constructor(
-    @Inject(SESSION_REPOSITORY) private readonly sessions: SessionRepositoryPort,
-    @Inject(ASSIGNMENT_REPOSITORY) private readonly assignments: AssignmentRepositoryPort,
-    @Inject(SUBMISSION_REPOSITORY) private readonly submissions: SubmissionRepositoryPort,
-    @Inject(FEEDBACK_REPOSITORY) private readonly feedbacks: FeedbackRepositoryPort,
-    @Inject(REPORT_REPOSITORY) private readonly reports: ReportRepositoryPort,
+    @Inject(SESSION_REPOSITORY)
+    private readonly sessions: SessionRepositoryPort,
+    @Inject(ASSIGNMENT_REPOSITORY)
+    private readonly assignments: AssignmentRepositoryPort,
+    @Inject(SUBMISSION_REPOSITORY)
+    private readonly submissions: SubmissionRepositoryPort,
+    @Inject(FEEDBACK_REPOSITORY)
+    private readonly feedbacks: FeedbackRepositoryPort,
+    @Inject(REPORT_REPOSITORY) private readonly reports: ReportRepositoryPort
   ) {}
 
   // --- Session ---
@@ -55,7 +67,7 @@ export class DebugController {
     @Query('studentId') studentId?: string,
     @Query('sessionId') sessionId?: string,
     @Query('date') date?: string,
-    @Query('type') type?: AssignmentType,
+    @Query('type') type?: AssignmentType
   ) {
     return this.assignments.list({ orgId, studentId, sessionId, date, type });
   }

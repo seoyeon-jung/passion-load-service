@@ -7,15 +7,20 @@ import { AssignmentType } from '../../../../../common/types/enums';
 import { fromYyyyMmDd, toYyyyMmDd } from '../../../../../common/types/date';
 import type { DailyAssignment } from '../../../ports/assignment.repository.port';
 
-export const toPrismaAssignmentType = (t: AssignmentType): PrismaAssignmentType =>
-  t as unknown as PrismaAssignmentType;
+export const toPrismaAssignmentType = (
+  t: AssignmentType
+): PrismaAssignmentType => t as unknown as PrismaAssignmentType;
 
-export const toDomainAssignmentType = (t: PrismaAssignmentType): AssignmentType =>
-  t as unknown as AssignmentType;
+export const toDomainAssignmentType = (
+  t: PrismaAssignmentType
+): AssignmentType => t as unknown as AssignmentType;
 
-export const toPrismaAssignmentDate = (yyyyMmDd: string): Date => fromYyyyMmDd(yyyyMmDd);
+export const toPrismaAssignmentDate = (yyyyMmDd: string): Date =>
+  fromYyyyMmDd(yyyyMmDd);
 
-export const toDomainAssignment = (row: PrismaDailyAssignment): DailyAssignment => ({
+export const toDomainAssignment = (
+  row: PrismaDailyAssignment
+): DailyAssignment => ({
   id: row.id,
   orgId: row.organizationId,
   sessionId: row.sessionId,

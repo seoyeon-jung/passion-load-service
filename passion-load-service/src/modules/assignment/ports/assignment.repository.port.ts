@@ -1,5 +1,5 @@
-import { DailyAssignmentStatus } from "@prisma/client";
-import { AssignmentType } from "../../../common/types/enums";
+import { DailyAssignmentStatus } from '@prisma/client';
+import { AssignmentType } from '../../../common/types/enums';
 
 export type DailyAssignment = {
   id: string;
@@ -14,7 +14,7 @@ export type DailyAssignment = {
   title: string | null;
   body: string | null;
   dueAt: Date | null;
-  status: string; 
+  status: string;
   incompletionReason: string | null;
 
   // 선택 필드

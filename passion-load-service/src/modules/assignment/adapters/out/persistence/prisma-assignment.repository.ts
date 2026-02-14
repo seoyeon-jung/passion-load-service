@@ -87,8 +87,12 @@ export class PrismaAssignmentRepository implements AssignmentRepositoryPort {
       organizationId: filter.orgId,
       ...(filter.studentId ? { studentId: filter.studentId } : {}),
       ...(filter.sessionId ? { sessionId: filter.sessionId } : {}),
-      ...(filter.date ? { assignmentDate: toPrismaAssignmentDate(filter.date) } : {}),
-      ...(filter.type ? { assignmentType: toPrismaAssignmentType(filter.type) } : {}),
+      ...(filter.date
+        ? { assignmentDate: toPrismaAssignmentDate(filter.date) }
+        : {}),
+      ...(filter.type
+        ? { assignmentType: toPrismaAssignmentType(filter.type) }
+        : {}),
     };
 
     const rows = await this.prisma.dailyAssignment.findMany({
@@ -102,48 +106,52 @@ export class PrismaAssignmentRepository implements AssignmentRepositoryPort {
   async upsertDailyCheck(input: UpsertDailyCheckInput) {
     const assignmentDate = toPrismaAssignmentDate(input.assignmentDate);
 
-    const row = await this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const existing = await tx.dailyAssignment.findFirst({
-        where: {
-          organizationId: input.orgId,
-          studentId: input.studentId,
-          assignmentType: toPrismaAssignmentType(AssignmentType.DAILY_CHECK),
-          assignmentDate,
-        },
-      });
-
-      if (!existing) {
-        return tx.dailyAssignment.create({
-          data: {
+    const row = await this.prisma.$transaction(
+      async (tx: Prisma.TransactionClient) => {
+        const existing = await tx.dailyAssignment.findFirst({
+          where: {
             organizationId: input.orgId,
-            sessionId: null,
             studentId: input.studentId,
-
-            assignmentDate,
             assignmentType: toPrismaAssignmentType(AssignmentType.DAILY_CHECK),
+            assignmentDate,
+          },
+        });
 
+        if (!existing) {
+          return tx.dailyAssignment.create({
+            data: {
+              organizationId: input.orgId,
+              sessionId: null,
+              studentId: input.studentId,
+
+              assignmentDate,
+              assignmentType: toPrismaAssignmentType(
+                AssignmentType.DAILY_CHECK
+              ),
+
+              checked: input.checked,
+              contactMade: input.contactMade,
+              checkMemo: input.checkMemo ?? null,
+
+              // TASK 필드들은 null로
+              title: null,
+              body: null,
+              dueAt: null,
+              incompletionReason: null,
+            },
+          });
+        }
+
+        return tx.dailyAssignment.update({
+          where: { id: existing.id },
+          data: {
             checked: input.checked,
             contactMade: input.contactMade,
             checkMemo: input.checkMemo ?? null,
-
-            // TASK 필드들은 null로
-            title: null,
-            body: null,
-            dueAt: null,
-            incompletionReason: null,
           },
         });
       }
-
-      return tx.dailyAssignment.update({
-        where: { id: existing.id },
-        data: {
-          checked: input.checked,
-          contactMade: input.contactMade,
-          checkMemo: input.checkMemo ?? null,
-        },
-      });
-    });
+    );
 
     return toDomainAssignment(row);
   }

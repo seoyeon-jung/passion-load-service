@@ -11,7 +11,12 @@ import { DebugController } from '../modules/debug.controller';
 
 @Module({
   imports: [PrismaModule, LmsModule, PersistenceModule],
-  controllers: [AppController, HealthController, LmsDebugController, DebugController],
+  controllers: [
+    AppController,
+    HealthController,
+    LmsDebugController,
+    DebugController,
+  ],
   providers: [AppService],
 })
 export class AppModule implements NestModule {

@@ -1,7 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { CreateSessionInput, SessionRepositoryPort, UpdateSessionInput } from "../../../ports/session.repository.port";
-import { PrismaService } from "../../../../../common/prisma/prisma.service";
-import { toDomainSession, toPrismaSessionDate, toPrismaSessionStatus } from "./session.mapper";
+import { Injectable } from '@nestjs/common';
+import {
+  CreateSessionInput,
+  SessionRepositoryPort,
+  UpdateSessionInput,
+} from '../../../ports/session.repository.port';
+import { PrismaService } from '../../../../../common/prisma/prisma.service';
+import {
+  toDomainSession,
+  toPrismaSessionDate,
+  toPrismaSessionStatus,
+} from './session.mapper';
 
 @Injectable()
 export class PrismaSessionRepository implements SessionRepositoryPort {
@@ -30,7 +38,7 @@ export class PrismaSessionRepository implements SessionRepositoryPort {
   async listByOrg(orgId: string) {
     const rows = await this.prisma.session.findMany({
       where: { organizationId: orgId },
-      orderBy: { sessionDate: "asc" },
+      orderBy: { sessionDate: 'asc' },
     });
     return rows.map(toDomainSession);
   }
@@ -45,5 +53,5 @@ export class PrismaSessionRepository implements SessionRepositoryPort {
       },
     });
     return toDomainSession(row);
-      }
   }
+}

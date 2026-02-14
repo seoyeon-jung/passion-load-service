@@ -1,4 +1,4 @@
-import { AssignmentType } from "../../../common/types/enums";
+import { AssignmentType } from '../../../common/types/enums';
 
 // 공통 필드
 export type AssignmentBase = {
