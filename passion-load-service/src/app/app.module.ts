@@ -8,9 +8,10 @@ import { LmsDebugController } from '../lms-debug.controller';
 import { LmsModule } from '../common/clients/lms/lms.module';
 import { PersistenceModule } from '../modules/persistence.module';
 import { DebugController } from '../modules/debug.controller';
+import { SessionsModule } from '../modules/session/sessions.module';
 
 @Module({
-  imports: [PrismaModule, LmsModule, PersistenceModule],
+  imports: [PrismaModule, LmsModule, PersistenceModule, SessionsModule],
   controllers: [
     AppController,
     HealthController,
