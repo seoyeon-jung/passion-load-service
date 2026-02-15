@@ -1,4 +1,5 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { join } = require('path');
 
 module.exports = {
@@ -21,6 +22,15 @@ module.exports = {
       generatePackageJson: false,
       sourceMap: true,
       externalDependencies: 'all',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: join(__dirname, '../node_modules/.prisma'),
+          to: join(__dirname, 'dist/node_modules/.prisma'),
+          noErrorOnMissing: false,
+        },
+      ],
     }),
   ],
 };

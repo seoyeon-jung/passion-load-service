@@ -1,4 +1,5 @@
-import { AssignmentType } from './enums';
+import { AssignmentType } from '../../../common/types/enums';
+
 // 공통 필드
 export type AssignmentBase = {
   id: string;
@@ -28,7 +29,7 @@ export type TaskAssignment = AssignmentBase & {
 
   dueAt?: Date; // 제출 마감이 있는 경우
 
-  incompletionReasion?: string; // 미완료 사유
+  incompletionReason?: string; // 미완료 사유
 };
 
 /**
@@ -41,8 +42,8 @@ export type DailyCheckAssignment = AssignmentBase & {
   sessionId?: never;
 
   checked: boolean;
-  contackMade: boolean;
-  meno?: string;
+  contactMade: boolean;
+  memo?: string;
 };
 
 export type DailyAssignment = TaskAssignment | DailyCheckAssignment;

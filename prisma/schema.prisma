@@ -17,6 +17,12 @@ enum AssignmentType {
   DAILY_CHECK
 }
 
+enum DailyAssignmentStatus {
+  SCHEDULED
+  COMPLETED
+  INCOMPLETE
+}
+
 enum SubmissionStatus {
   NOT_STARTED
   IN_PROGRESS
@@ -25,92 +31,132 @@ enum SubmissionStatus {
 }
 
 model Session {
-  id             String        @id @default(uuid())
-  organizationId String        @map("organization_id")
-  teacherId      String?       @map("teacher_id")
-  title          String
-  sessionDate    DateTime      @map("session_date")
-  status         SessionStatus @default(PLANNED)
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
+  id             String @id @default(uuid()) @db.Uuid
+  organizationId String @map("organization_id") @db.Uuid
+
+  /// LMS 외부 ID일 가능성 → String 추천 (uuid 강제하면 위험)
+  teacherId String? @map("teacher_id")
+
+  title       String
+  sessionDate DateTime      @map("session_date")
+  status      SessionStatus @default(PLANNED)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   assignments DailyAssignment[]
 
   @@index([organizationId])
+  @@index([organizationId, sessionDate])
   @@index([sessionDate])
   @@map("sessions")
 }
 
 model DailyAssignment {
-  id             String         @id @default(uuid())
-  organizationId String         @map("organization_id")
-  sessionId      String?        @map("session_id")
-  studentId      String         @map("student_id")
-  date           DateTime
-  type           AssignmentType @map("assignment_type")
-  title          String?
-  content        String?
-  createdAt      DateTime       @default(now()) @map("created_at")
-  updatedAt      DateTime       @updatedAt @map("updated_at")
+  id String @id @default(uuid()) @db.Uuid
 
-  session     Session?                 @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  organizationId String  @map("organization_id") @db.Uuid
+  sessionId      String? @map("session_id") @db.Uuid
+
+  /// LMS 외부 ID일 가능성 → String 추천
+  studentId String @map("student_id")
+
+  assignmentDate DateTime       @map("assignment_date") @db.Date
+  assignmentType AssignmentType @map("assignment_type")
+
+  // TASK
+  title              String?
+  body               String?               @db.Text
+  dueAt              DateTime?             @map("due_at")
+  status             DailyAssignmentStatus @default(SCHEDULED)
+  incompletionReason String?               @map("incompletion_reason") @db.Text
+
+  // 선택 필드
+  subject          String?
+  categoryType     String? @map("category_type")
+  difficulty       String?
+  estimatedMinutes Int?    @map("estimated_minutes")
+
+  // DAILY_CHECK
+  checked     Boolean @default(false)
+  contactMade Boolean @default(false) @map("contact_made")
+  checkMemo   String? @map("check_memo") @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  session Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
   submissions AssignmentSubmission[]
   feedbacks   Feedback[]
 
   @@index([organizationId])
-  @@index([studentId, date])
+  @@index([organizationId, assignmentDate])
   @@index([sessionId])
+  @@index([studentId, assignmentDate])
+  @@index([assignmentType, assignmentDate])
+  @@index([organizationId, studentId, assignmentDate])
   @@map("daily_assignments")
 }
 
 model AssignmentSubmission {
-  id             String           @id @default(uuid())
-  organizationId String           @map("organization_id")
-  assignmentId   String           @map("assignment_id")
-  studentId      String           @map("student_id")
-  status         SubmissionStatus @default(NOT_STARTED)
-  reason         String?
-  scheduleNote   String?          @map("schedule_note")
-  createdAt      DateTime         @default(now()) @map("created_at")
-  updatedAt      DateTime         @updatedAt @map("updated_at")
+  id             String @id @default(uuid()) @db.Uuid
+  organizationId String @map("organization_id") @db.Uuid
+  assignmentId   String @map("assignment_id") @db.Uuid
+
+  /// LMS 외부 ID일 가능성 → String 추천
+  studentId String @map("student_id")
+
+  status       SubmissionStatus @default(NOT_STARTED)
+  reason       String?
+  scheduleNote String?          @map("schedule_note")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
 
   assignment DailyAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
 
   @@unique([assignmentId, studentId]) // upsert 키
   @@index([organizationId])
+  @@index([organizationId, assignmentId])
   @@index([studentId])
   @@map("assignment_submissions")
 }
 
 model Feedback {
-  id             String   @id @default(uuid())
-  organizationId String   @map("organization_id")
-  studentId      String   @map("student_id")
-  assignmentId   String?  @map("assignment_id")
-  content        String   // 250자 제한은 앱 레벨 검증
-  createdAt      DateTime @default(now()) @map("created_at")
+  id             String @id @default(uuid()) @db.Uuid
+  organizationId String @map("organization_id") @db.Uuid
+
+  /// LMS 외부 ID일 가능성 → String 추천
+  studentId String @map("student_id")
+
+  assignmentId String?  @map("assignment_id") @db.Uuid
+  content      String // 250자 제한은 앱 레벨 검증
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   assignment DailyAssignment? @relation(fields: [assignmentId], references: [id], onDelete: SetNull)
 
   @@index([organizationId])
+  @@index([organizationId, studentId])
   @@index([studentId])
   @@index([assignmentId])
   @@map("feedbacks")
 }
 
 model Report {
-  id             String   @id @default(uuid())
-  organizationId String   @map("organization_id")
-  createdBy      String?  @map("created_by")
-  fromDate       DateTime @map("from_date")
-  toDate         DateTime @map("to_date")
-  targetStudentId String? @map("target_student_id")
-  url            String?
-  metadata       Json?
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @map("organization_id") @db.Uuid
+
+  studentId      String   @map("student_id") @db.Uuid
+  sessionId      String?  @map("session_id") @db.Uuid
+
+  summary        String   @db.Text
+  analysis       Json?    // AI 분석 결과(JSON)
+
   createdAt      DateTime @default(now()) @map("created_at")
 
   @@index([organizationId])
-  @@index([fromDate, toDate])
-  @@index([targetStudentId])
+  @@index([studentId])
+  @@index([sessionId])
   @@map("reports")
 }
