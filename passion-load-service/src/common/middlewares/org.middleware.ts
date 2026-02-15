@@ -1,17 +1,12 @@
-import { RequestWithOrg } from './../../../../.nx/cache/1395239590521343294/passion-load-service/dist/common/types/request-with-org.d';
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { NextFunction, Response } from 'express';
+import type { Response, NextFunction } from 'express';
+import type { RequestContext } from '../types/request-context';
 
 @Injectable()
 export class OrgMiddleware implements NestMiddleware {
-  use(req: RequestWithOrg, _res: Response, next: NextFunction) {
-    const headerName = (
-      process.env.ORG_HEADER_NAME || 'x-organization-id'
-    ).toLowerCase();
-
-    const orgId = req.headers[headerName] as string | undefined;
-    if (orgId) req.organizationId = orgId;
-
+  use(req: RequestContext, _res: Response, next: NextFunction) {
+    const orgId = req.header('x-organization-id') ?? undefined;
+    req.organizationId = orgId;
     next();
   }
 }
