@@ -1,6 +1,6 @@
+import { RequestWithOrg } from './../../../../.nx/cache/1395239590521343294/passion-load-service/dist/common/types/request-with-org.d';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Response } from 'express';
-import { RequestWithOrg } from '../types/request-with-org';
 
 @Injectable()
 export class OrgMiddleware implements NestMiddleware {

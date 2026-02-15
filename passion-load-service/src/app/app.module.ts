@@ -9,6 +9,7 @@ import { LmsModule } from '../common/clients/lms/lms.module';
 import { PersistenceModule } from '../modules/persistence.module';
 import { DebugController } from '../modules/debug.controller';
 import { SessionsModule } from '../modules/session/sessions.module';
+import { UserContextMiddleware } from '../common/middlewares/user-context.middleware';
 
 @Module({
   imports: [PrismaModule, LmsModule, PersistenceModule, SessionsModule],
@@ -22,6 +23,6 @@ import { SessionsModule } from '../modules/session/sessions.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(OrgMiddleware).forRoutes('*');
+    consumer.apply(OrgMiddleware, UserContextMiddleware).forRoutes('*');
   }
 }
