@@ -38,7 +38,10 @@ export class SessionsController {
   constructor(private readonly service: SessionService) {}
 
   @ApiOperation({ summary: 'Create session' })
-  @ApiCreatedResponse({ description: 'Created session', type: SessionResponseDto })
+  @ApiCreatedResponse({
+    description: 'Created session',
+    type: SessionResponseDto,
+  })
   @ApiBadRequestResponse({ description: 'Validation error (date format etc.)' })
   @ApiForbiddenResponse({ description: 'Need TEACHER/ADMIN' })
   @Roles('TEACHER', 'ADMIN')
@@ -73,12 +76,14 @@ export class SessionsController {
   update(
     @OrgId() orgId: string,
     @Param('id') id: string,
-    @Body() dto: UpdateSessionDto,
+    @Body() dto: UpdateSessionDto
   ) {
     return this.service.update(orgId, id, dto);
   }
 
-  @ApiOperation({ summary: 'Update session status (PLANNED -> ACTIVE -> DONE)' })
+  @ApiOperation({
+    summary: 'Update session status (PLANNED -> ACTIVE -> DONE)',
+  })
   @ApiParam({ name: 'id', description: 'Session UUID' })
   @ApiOkResponse({ description: 'Updated session', type: SessionResponseDto })
   @ApiBadRequestResponse({ description: 'Invalid status transition' })
@@ -88,7 +93,7 @@ export class SessionsController {
   updateStatus(
     @OrgId() orgId: string,
     @Param('id') id: string,
-    @Body() dto: UpdateSessionStatusDto,
+    @Body() dto: UpdateSessionStatusDto
   ) {
     return this.service.updateStatus(orgId, id, dto.status);
   }

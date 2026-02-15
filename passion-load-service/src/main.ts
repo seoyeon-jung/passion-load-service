@@ -19,14 +19,17 @@ async function bootstrap() {
 
   // global error format
   app.useGlobalFilters(new HttpExceptionFilter());
-  
+
   // swagger
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Passion Load Service')
     .setDescription('passion-load-service API')
     .setVersion('1.0.0')
     // Authorize 버튼에서 헤더 3개를 넣을 수 있게 등록
-    .addApiKey({ type: 'apiKey', name: 'x-organization-id', in: 'header' }, 'org')
+    .addApiKey(
+      { type: 'apiKey', name: 'x-organization-id', in: 'header' },
+      'org'
+    )
     .addApiKey({ type: 'apiKey', name: 'x-user-role', in: 'header' }, 'role')
     .addApiKey({ type: 'apiKey', name: 'x-user-id', in: 'header' }, 'user')
     .build();

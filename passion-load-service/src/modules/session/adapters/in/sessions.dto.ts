@@ -1,5 +1,11 @@
-import { IsEnum, IsOptional, IsString, Matches, MaxLength } from "class-validator";
-import { SessionStatus } from "../../../../common/types/enums";
+import {
+  IsEnum,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+} from 'class-validator';
+import { SessionStatus } from '../../../../common/types/enums';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateSessionDto {
