@@ -4,7 +4,7 @@ import {
   SessionRepositoryPort,
   UpdateSessionInput,
 } from '../../../ports/session.repository.port';
-import { PrismaService } from '../../../../../common/prisma/prisma.service';
+import { PrismaService } from '@common/prisma/prisma.service';
 import {
   toDomainSession,
   toPrismaSessionDate,

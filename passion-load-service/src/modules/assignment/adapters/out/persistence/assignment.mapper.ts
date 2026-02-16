@@ -3,8 +3,8 @@ import type {
   AssignmentType as PrismaAssignmentType,
 } from '@prisma/client';
 
-import { AssignmentType } from '../../../../../common/types/enums';
-import { fromYyyyMmDd, toYyyyMmDd } from '../../../../../common/types/date';
+import { AssignmentType } from '@common/types/enums';
+import { fromYyyyMmDd, toYyyyMmDd } from '@common/types/date';
 import type { DailyAssignment } from '../../../ports/assignment.repository.port';
 
 export const toPrismaAssignmentType = (

@@ -7,7 +7,7 @@ import {
 import { SESSION_REPOSITORY } from '../persistence.tokens';
 import type { SessionRepositoryPort } from './ports/session.repository.port';
 import { randomUUID } from 'crypto';
-import { SessionStatus } from '../../common/types/enums';
+import { SessionStatus } from '@common/types/enums';
 
 const ALLOWED_NEXT: Record<SessionStatus, SessionStatus[]> = {
   [SessionStatus.PLANNED]: [SessionStatus.ACTIVE],

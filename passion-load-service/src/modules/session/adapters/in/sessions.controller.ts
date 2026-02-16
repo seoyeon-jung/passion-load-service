@@ -8,14 +8,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { SessionService } from '../../session.service';
-import { OrgId } from '../../../../common/decorators/org-id.decorator';
+import { OrgId } from '@common/decorators/org-id.decorator';
 import {
   CreateSessionDto,
   UpdateSessionDto,
   UpdateSessionStatusDto,
 } from './sessions.dto';
-import { RolesGuard } from '../../../../common/guards/roles.guard';
-import { Roles } from '../../../../common/decorators/roles.decorator';
+import { RolesGuard } from '@common/guards/roles.guard';
+import { Roles } from '@common/decorators//roles.decorator';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,

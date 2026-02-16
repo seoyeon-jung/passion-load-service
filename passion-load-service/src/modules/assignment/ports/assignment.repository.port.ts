@@ -1,5 +1,5 @@
 import { DailyAssignmentStatus } from '@prisma/client';
-import { AssignmentType } from '../../../common/types/enums';
+import { AssignmentType } from '@common/types/enums';
 
 export type DailyAssignment = {
   id: string;

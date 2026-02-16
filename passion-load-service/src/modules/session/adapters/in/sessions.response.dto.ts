@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SessionStatus } from '../../../../common/types/enums';
+import { SessionStatus } from '@common/types/enums';
 
 export class SessionResponseDto {
   @ApiProperty({ example: '1de46e1a-2850-4842-8042-c620f58f9233' })

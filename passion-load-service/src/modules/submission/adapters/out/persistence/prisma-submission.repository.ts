@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
 
-import { PrismaService } from '../../../../../common/prisma/prisma.service';
-import { fromYyyyMmDd } from '../../../../../common/types/date';
+import { PrismaService } from '@common/prisma/prisma.service';
+import { fromYyyyMmDd } from '@common/types/date';
 import type {
   SubmissionRepositoryPort,
   UpsertSubmissionInput,

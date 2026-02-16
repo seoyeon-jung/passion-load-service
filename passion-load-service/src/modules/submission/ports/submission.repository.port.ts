@@ -1,4 +1,4 @@
-import { SubmissionStatus } from '../../../common/types/enums';
+import { SubmissionStatus } from '@common/types/enums';
 
 export type AssignmentSubmission = {
   id: string;
