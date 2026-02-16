@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '../common/prisma/prisma.module';
+import { PrismaModule } from '@common/prisma/prisma.module';
 
 import { PrismaSessionRepository } from './session/adapters/out/persistence/prisma-session.repository';
 import { PrismaAssignmentRepository } from './assignment/adapters/out/persistence/prisma-assignment.repository';

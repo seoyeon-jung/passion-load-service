@@ -16,6 +16,11 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["@org/source"]
+    "customConditions": ["@org/source"],
+    "baseUrl": ".",
+    "paths": {
+      "@common/*": ["passion-load-service/src/common/*"],
+      "@modules/*": ["passion-load-service/src/modules/*"]
+    }
   }
 }

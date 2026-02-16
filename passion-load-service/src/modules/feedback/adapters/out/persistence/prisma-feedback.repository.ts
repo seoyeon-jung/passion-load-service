@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
 
-import { PrismaService } from '../../../../../common/prisma/prisma.service';
+import { PrismaService } from '@common/prisma/prisma.service';
 import type {
   FeedbackRepositoryPort,
   CreateFeedbackInput,

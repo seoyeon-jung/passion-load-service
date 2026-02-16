@@ -22,7 +22,7 @@ import type { SubmissionRepositoryPort } from './submission/ports/submission.rep
 import type { FeedbackRepositoryPort } from './feedback/ports/feedback.repository.port';
 import type { ReportRepositoryPort } from './report/ports/report.repository.port';
 
-import { AssignmentType } from '../common/types/enums';
+import { AssignmentType } from '@common/types/enums';
 
 @Controller('/debug')
 export class DebugController {

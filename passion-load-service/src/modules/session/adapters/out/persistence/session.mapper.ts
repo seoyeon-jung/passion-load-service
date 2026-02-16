@@ -2,8 +2,8 @@ import type {
   Session as PrismaSession,
   SessionStatus as PrismaSessionStatus,
 } from '@prisma/client';
-import { SessionStatus } from '../../../../../common/types/enums';
-import { fromYyyyMmDd, toYyyyMmDd } from '../../../../../common/types/date';
+import { SessionStatus } from '@common/types/enums';
+import { fromYyyyMmDd, toYyyyMmDd } from '@common/types/date';
 import { Session } from '../../../domain/session.model';
 
 export const toDomainSessionStatus = (s: PrismaSessionStatus): SessionStatus =>

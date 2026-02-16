@@ -1,5 +1,5 @@
 import type { AssignmentSubmission as PrismaSubmission } from '@prisma/client';
-import { SubmissionStatus } from '../../../../../common/types/enums';
+import { SubmissionStatus } from '@common/types/enums';
 import type { AssignmentSubmission } from '../../../ports/submission.repository.port';
 
 export const toDomainSubmission = (

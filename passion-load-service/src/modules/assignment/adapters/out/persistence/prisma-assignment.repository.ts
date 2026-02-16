@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
 
-import { PrismaService } from '../../../../../common/prisma/prisma.service';
-import { AssignmentType } from '../../../../../common/types/enums';
+import { PrismaService } from '@common/prisma/prisma.service';
+import { AssignmentType } from '@common/types/enums';
 import type {
   AssignmentRepositoryPort,
   CreateTaskInput,

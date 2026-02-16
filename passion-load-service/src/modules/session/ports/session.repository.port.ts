@@ -1,4 +1,4 @@
-import { SessionStatus } from '../../../common/types/enums';
+import { SessionStatus } from '@common/types/enums';
 import { Session } from '../domain/session.model';
 
 export type CreateSessionInput = {
