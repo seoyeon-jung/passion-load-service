@@ -10,9 +10,16 @@ import { PersistenceModule } from '@modules/persistence.module';
 import { DebugController } from '@modules/debug.controller';
 import { SessionsModule } from '@modules/session/sessions.module';
 import { PrismaModule } from '@common/prisma/prisma.module';
+import { AssignmentModule } from '@modules/assignment/assignments.module';
 
 @Module({
-  imports: [PrismaModule, LmsModule, PersistenceModule, SessionsModule],
+  imports: [
+    PrismaModule,
+    LmsModule,
+    PersistenceModule,
+    SessionsModule,
+    AssignmentModule,
+  ],
   controllers: [
     AppController,
     HealthController,
