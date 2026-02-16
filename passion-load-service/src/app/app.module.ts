@@ -11,6 +11,7 @@ import { DebugController } from '@modules/debug.controller';
 import { SessionsModule } from '@modules/session/sessions.module';
 import { PrismaModule } from '@common/prisma/prisma.module';
 import { AssignmentModule } from '@modules/assignment/assignments.module';
+import { SubmissionModule } from '@modules/submission/submisson.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AssignmentModule } from '@modules/assignment/assignments.module';
     PersistenceModule,
     SessionsModule,
     AssignmentModule,
+    SubmissionModule,
   ],
   controllers: [
     AppController,
