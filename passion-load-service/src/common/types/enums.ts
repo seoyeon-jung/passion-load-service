@@ -1,7 +1,7 @@
 export enum SessionStatus {
-  DRAFT = 'DRAFT',
+  PLANNED = 'PLANNED',
   ACTIVE = 'ACTIVE',
-  CLOSED = 'CLOSED',
+  DONE = 'DONE',
 }
 
 export enum AssignmentType {

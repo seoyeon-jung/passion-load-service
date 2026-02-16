@@ -1,17 +1,12 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { NextFunction, Response } from 'express';
-import { RequestWithOrg } from '../types/request-with-org';
+import type { Response, NextFunction } from 'express';
+import type { RequestContext } from '../types/request-context';
 
 @Injectable()
 export class OrgMiddleware implements NestMiddleware {
-  use(req: RequestWithOrg, _res: Response, next: NextFunction) {
-    const headerName = (
-      process.env.ORG_HEADER_NAME || 'x-organization-id'
-    ).toLowerCase();
-
-    const orgId = req.headers[headerName] as string | undefined;
-    if (orgId) req.organizationId = orgId;
-
+  use(req: RequestContext, _res: Response, next: NextFunction) {
+    const orgId = req.header('x-organization-id') ?? undefined;
+    req.organizationId = orgId;
     next();
   }
 }
