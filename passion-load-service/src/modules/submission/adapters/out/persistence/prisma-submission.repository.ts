@@ -9,6 +9,7 @@ import type {
   SubmissionQuery,
 } from '../../../ports/submission.repository.port';
 import { toDomainSubmission } from './submission.mapper';
+import type { SubmissionStatus as PrismaSubmissionStatus } from '@prisma/client';
 
 @Injectable()
 export class PrismaSubmissionRepository implements SubmissionRepositoryPort {
@@ -26,14 +27,16 @@ export class PrismaSubmissionRepository implements SubmissionRepositoryPort {
         organizationId: input.orgId,
         assignmentId: input.assignmentId,
         studentId: input.studentId,
-        status: input.status as unknown as any,
+        status: input.status as unknown as PrismaSubmissionStatus,
         reason: input.reason ?? null,
         scheduleNote: input.scheduleNote ?? null,
       },
       update: {
-        status: input.status as unknown as any,
-        reason: input.reason ?? undefined,
-        scheduleNote: input.scheduleNote ?? undefined,
+        status: input.status as unknown as PrismaSubmissionStatus,
+        ...(input.reason !== undefined ? { reason: input.reason } : {}),
+        ...(input.scheduleNote !== undefined
+          ? { scheduleNote: input.scheduleNote }
+          : {}),
       },
     });
 
