@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  Matches,
   MaxLength,
   ValidateIf,
 } from 'class-validator';
@@ -34,4 +35,22 @@ export class UpsertSubmissionDto {
   @IsOptional()
   @IsString()
   scheduleNote?: string;
+}
+
+export class ListSubmissionQueryDto {
+  @ApiPropertyOptional({ example: 'a09a4529-5e30-49b7-80c4-142313d8a2df' })
+  @IsOptional()
+  @IsUUID()
+  assignmentId?: string;
+
+  @ApiPropertyOptional({ example: 'LMS_STUDENT_0001' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  studentId?: string;
+
+  @ApiPropertyOptional({ example: '2026-02-16' })
+  @IsOptional()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  date?: string;
 }
