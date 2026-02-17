@@ -10,7 +10,10 @@ import {
 } from '@nestjs/common';
 import type { SubmissionRepositoryPort } from './ports/submission.repository.port';
 import type { AssignmentRepositoryPort } from '@modules/assignment/ports/assignment.repository.port';
-import { UpsertSubmissionDto } from './adapters/in/submissions.dto';
+import {
+  ListSubmissionQueryDto,
+  UpsertSubmissionDto,
+} from './adapters/in/submissions.dto';
 import { AssignmentType } from '@common/types/enums';
 
 @Injectable()
@@ -40,6 +43,21 @@ export class SubmissionService {
       status: dto.status,
       reason: dto.reason ?? null,
       scheduleNote: dto.scheduleNote ?? null,
+    });
+  }
+
+  async list(orgId: string, query: ListSubmissionQueryDto) {
+    if (!query.assignmentId && !query.studentId && !query.date) {
+      throw new BadRequestException(
+        'at least one filter is required: assignmentId, studentId, or date'
+      );
+    }
+
+    return this.submissions.list({
+      orgId,
+      assignmentId: query.assignmentId,
+      studentId: query.studentId,
+      date: query.date,
     });
   }
 }
