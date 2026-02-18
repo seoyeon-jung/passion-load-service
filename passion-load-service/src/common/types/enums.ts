@@ -10,7 +10,8 @@ export enum AssignmentType {
 }
 
 export enum SubmissionStatus {
-  NOT_SUBMITTED = 'NOT_SUBMITTED',
-  SUBMITTED = 'SUBMITTED',
-  REVIEWED = 'REVIEWED',
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE',
+  HOLD = 'HOLD',
 }
