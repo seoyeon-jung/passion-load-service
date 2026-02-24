@@ -128,6 +128,7 @@ model Feedback {
 
   /// LMS 외부 ID일 가능성 → String 추천
   studentId String @map("student_id")
+  teacherId String @map("teacher_id")
 
   assignmentId String?  @map("assignment_id") @db.Uuid
   content      String // 250자 제한은 앱 레벨 검증
@@ -140,6 +141,7 @@ model Feedback {
   @@index([organizationId, studentId])
   @@index([studentId])
   @@index([assignmentId])
+  @@index([teacherId])
   @@map("feedbacks")
 }
 
