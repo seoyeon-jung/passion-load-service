@@ -22,6 +22,7 @@ import {
 import { randomUUID } from 'crypto';
 import { fromYyyyMmDd } from '@common/types/date';
 import { AssignmentType } from '@common/types/enums';
+import { UpsertDailyCheckDto } from './adapters/in/daily-checks.dto';
 
 @Injectable()
 export class AssignmentService {
@@ -109,5 +110,17 @@ export class AssignmentService {
     };
 
     return this.assignments.updateTask(id, input);
+  }
+
+  async upsertDailyCheck(orgId: string, dto: UpsertDailyCheckDto) {
+    return this.assignments.upsertDailyCheck({
+      id: randomUUID(),
+      orgId,
+      studentId: dto.studentId,
+      assignmentDate: dto.date,
+      checked: dto.checked,
+      contactMade: dto.contactMade,
+      checkMemo: dto.checkMemo ?? null,
+    });
   }
 }
