@@ -5,7 +5,9 @@ export const toDomainFeedback = (row: PrismaFeedback): Feedback => ({
   id: row.id,
   orgId: row.organizationId,
   studentId: row.studentId,
+  teacherId: row.teacherId,
   assignmentId: row.assignmentId ?? null,
   content: row.content,
   createdAt: row.createdAt,
+  updatedAt: row.updatedAt,
 });
