@@ -19,6 +19,7 @@ export class PrismaFeedbackRepository implements FeedbackRepositoryPort {
         id: input.id,
         organizationId: input.orgId,
         studentId: input.studentId,
+        teacherId: input.teacherId,
         assignmentId: input.assignmentId ?? null,
         content: input.content,
       },

@@ -4,7 +4,7 @@ export type CreateFeedbackInput = {
   id: string;
   orgId: string;
   studentId: string;
-  teacherId?: string | null;
+  teacherId: string;
   assignmentId?: string | null;
   content: string;
 };
