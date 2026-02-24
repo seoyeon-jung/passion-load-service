@@ -120,6 +120,7 @@ export class PrismaAssignmentRepository implements AssignmentRepositoryPort {
         if (!existing) {
           return tx.dailyAssignment.create({
             data: {
+              id: input.id,
               organizationId: input.orgId,
               sessionId: null,
               studentId: input.studentId,
