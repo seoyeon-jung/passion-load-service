@@ -12,6 +12,7 @@ import { SessionsModule } from '@modules/session/sessions.module';
 import { PrismaModule } from '@common/prisma/prisma.module';
 import { AssignmentModule } from '@modules/assignment/assignments.module';
 import { SubmissionModule } from '@modules/submission/submisson.module';
+import { FeedbacksModule } from '@modules/feedback/feedbacks.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { SubmissionModule } from '@modules/submission/submisson.module';
     SessionsModule,
     AssignmentModule,
     SubmissionModule,
+    FeedbacksModule,
   ],
   controllers: [
     AppController,
