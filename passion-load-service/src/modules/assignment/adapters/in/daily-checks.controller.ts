@@ -1,10 +1,20 @@
-import { OrgId } from "@common/decorators/org-id.decorator";
-import { Roles } from "@common/decorators/roles.decorator";
-import { RolesGuard } from "@common/guards/roles.guard";
-import { AssignmentService } from "@modules/assignment/assignments.service";
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOperation, ApiSecurity, ApiTags } from "@nestjs/swagger";
-import { UpsertDailyCheckDto } from "./daily-checks.dto";
+import { OrgId } from '@common/decorators/org-id.decorator';
+import { Roles } from '@common/decorators/roles.decorator';
+import { RolesGuard } from '@common/guards/roles.guard';
+import { AssignmentService } from '@modules/assignment/assignments.service';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
+import {
+  ListDailyChecksQueryDto,
+  UpsertDailyCheckDto,
+} from './daily-checks.dto';
 
 @ApiTags('daily-checks')
 @ApiSecurity('org')
@@ -22,5 +32,14 @@ export class DailyChecksController {
   @Post()
   upsert(@OrgId() orgId: string, @Body() dto: UpsertDailyCheckDto) {
     return this.service.upsertDailyCheck(orgId, dto);
+  }
+
+  @ApiOperation({ summary: 'List DAILY_CHECK (filters: date | studentId)' })
+  @ApiOkResponse({ description: 'Daily check list' })
+  @ApiBadRequestResponse({ description: 'At least one filter required' })
+  @Roles('TEACHER', 'ADMIN')
+  @Get()
+  list(@OrgId() orgId: string, @Query() query: ListDailyChecksQueryDto) {
+    return this.service.listDailyChecks(orgId, query);
   }
 }
