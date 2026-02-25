@@ -22,6 +22,10 @@ import {
 import { randomUUID } from 'crypto';
 import { fromYyyyMmDd } from '@common/types/date';
 import { AssignmentType } from '@common/types/enums';
+import {
+  ListDailyChecksQueryDto,
+  UpsertDailyCheckDto,
+} from './adapters/in/daily-checks.dto';
 
 @Injectable()
 export class AssignmentService {
@@ -109,5 +113,32 @@ export class AssignmentService {
     };
 
     return this.assignments.updateTask(id, input);
+  }
+
+  async upsertDailyCheck(orgId: string, dto: UpsertDailyCheckDto) {
+    return this.assignments.upsertDailyCheck({
+      id: randomUUID(),
+      orgId,
+      studentId: dto.studentId,
+      assignmentDate: dto.date,
+      checked: dto.checked,
+      contactMade: dto.contactMade,
+      checkMemo: dto.checkMemo ?? null,
+    });
+  }
+
+  async listDailyChecks(orgId: string, query: ListDailyChecksQueryDto) {
+    if (!query.date && !query.studentId) {
+      throw new BadRequestException(
+        'at least one filter is required: date or studentId'
+      );
+    }
+
+    return this.assignments.list({
+      orgId,
+      type: AssignmentType.DAILY_CHECK,
+      date: query.date,
+      studentId: query.studentId,
+    });
   }
 }
