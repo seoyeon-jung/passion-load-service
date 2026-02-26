@@ -1,30 +1,30 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional, IsString, MaxLength } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CounselingStatusQueryDto {
-    @ApiPropertyOptional({ example: 'student_123' })
-    @IsOptional()
-    @IsString()
-    @MaxLength(100)
-    studentId?: string;
+  @ApiPropertyOptional({ example: 'student_123' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  studentId?: string;
 }
 
 export class CounselingStatusItemDto {
-    @ApiProperty()
-    studentId!: string;
+  @ApiProperty()
+  studentId!: string;
 
-    @ApiProperty()
-    name!: string;
+  @ApiProperty()
+  name!: string;
 
-    @ApiPropertyOptional()
-    email?: string;
+  @ApiPropertyOptional()
+  email?: string;
 
-    @ApiProperty()
-    questionsCount!: number;
+  @ApiProperty()
+  questionsCount!: number;
 
-    @ApiPropertyOptional()
-    lastQuestionAt?: string;
+  @ApiPropertyOptional()
+  lastQuestionAt?: string;
 
-    @ApiPropertyOptional()
-    lastQuestionContent?: string;
+  @ApiPropertyOptional()
+  lastQuestionContent?: string;
 }

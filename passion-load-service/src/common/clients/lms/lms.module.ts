@@ -7,7 +7,8 @@ import { LmsMockAdapter } from './lms.mock.adapter';
   providers: [
     {
       provide: LMS_CLIENT,
-      useClass: process.env.LMS_MOCK === 'true' ? LmsMockAdapter : LmsHttpAdapter,
+      useClass:
+        process.env.LMS_MOCK === 'true' ? LmsMockAdapter : LmsHttpAdapter,
     },
   ],
   exports: [LMS_CLIENT],

@@ -1,11 +1,13 @@
 // Mock LmsClient (추후 삭제 예정)
 
-import { LmsClient } from "./lms.client";
-import { LmsQuestion, LmsStudent, LmsTeacher } from "./lms.types";
+import { LmsClient } from './lms.client';
+import { LmsQuestion, LmsStudent, LmsTeacher } from './lms.types';
 
 export class LmsMockAdapter implements LmsClient {
   async getTeachersByOrganization(orgId: string): Promise<LmsTeacher[]> {
-    return [{ id: 'teacher_001', name: 'Mock Teacher', email: 'teacher@example.com' }];
+    return [
+      { id: 'teacher_001', name: 'Mock Teacher', email: 'teacher@example.com' },
+    ];
   }
 
   async getStudentsByOrganization(orgId: string): Promise<LmsStudent[]> {
