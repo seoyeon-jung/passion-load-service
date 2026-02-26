@@ -1,6 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
 import { LmsClient } from './lms.client';
-import { LmsListResponse, LmsStudent, LmsTeacher } from './lms.types';
+import {
+  LmsListResponse,
+  LmsQuestion,
+  LmsStudent,
+  LmsTeacher,
+} from './lms.types';
 
 export class LmsHttpAdapter implements LmsClient {
   private readonly http: AxiosInstance;
@@ -30,6 +35,13 @@ export class LmsHttpAdapter implements LmsClient {
   async getStudentsByOrganization(orgId: string): Promise<LmsStudent[]> {
     const { data } = await this.http.get<LmsListResponse<LmsStudent>>(
       `/organizations/${orgId}/students`
+    );
+    return data.items ?? [];
+  }
+
+  async getQuestionsByOrganization(orgId: string): Promise<LmsQuestion[]> {
+    const { data } = await this.http.get<LmsListResponse<LmsQuestion>>(
+      `/organizations/${orgId}/questions`
     );
     return data.items ?? [];
   }

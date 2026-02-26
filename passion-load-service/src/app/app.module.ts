@@ -13,6 +13,7 @@ import { PrismaModule } from '@common/prisma/prisma.module';
 import { AssignmentModule } from '@modules/assignment/assignments.module';
 import { SubmissionModule } from '@modules/submission/submisson.module';
 import { FeedbacksModule } from '@modules/feedback/feedbacks.module';
+import { CounselingModule } from '@modules/counseling/counseling.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { FeedbacksModule } from '@modules/feedback/feedbacks.module';
     AssignmentModule,
     SubmissionModule,
     FeedbacksModule,
+    CounselingModule,
   ],
   controllers: [
     AppController,

@@ -10,6 +10,13 @@ export type LmsStudent = {
   email?: string;
 };
 
+export type LmsQuestion = {
+  id: string;
+  studentId: string;
+  content: string;
+  createdAt: string;
+};
+
 export type LmsListResponse<T> = {
   items: T[];
 };
