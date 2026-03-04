@@ -14,6 +14,7 @@ import { AssignmentModule } from '@modules/assignment/assignments.module';
 import { SubmissionModule } from '@modules/submission/submisson.module';
 import { FeedbacksModule } from '@modules/feedback/feedbacks.module';
 import { CounselingModule } from '@modules/counseling/counseling.module';
+import { ReportsModule } from '@modules/report/reports.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CounselingModule } from '@modules/counseling/counseling.module';
     SubmissionModule,
     FeedbacksModule,
     CounselingModule,
+    ReportsModule,
   ],
   controllers: [
     AppController,

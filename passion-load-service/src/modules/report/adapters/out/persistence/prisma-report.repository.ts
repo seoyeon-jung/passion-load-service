@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import type { Prisma } from '@prisma/client';
-
 import { PrismaService } from '@common/prisma/prisma.service';
-import type {
-  ReportRepositoryPort,
+import {
   CreateReportInput,
-  ReportQuery,
-} from '../../../ports/report.repository.port';
+  ListReportsQuery,
+  MarkReportSentInput,
+  ReportRepositoryPort,
+  SaveReportResultInput,
+} from '@modules/report/ports/report.repository.port';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { toDomainReport } from './report.mapper';
 
 @Injectable()
@@ -19,12 +19,14 @@ export class PrismaReportRepository implements ReportRepositoryPort {
         id: input.id,
         organizationId: input.orgId,
         studentId: input.studentId,
-        sessionId: input.sessionId ?? null,
+        sessionId: input.sessionId,
+        fromAt: input.fromAt,
+        toAt: input.toAt,
         summary: input.summary,
-        analysis: (input.analysis as any) ?? null,
+        analysis: input.analysis as any,
+        status: 'REQUESTED',
       },
     });
-
     return toDomainReport(row);
   }
 
@@ -33,18 +35,63 @@ export class PrismaReportRepository implements ReportRepositoryPort {
     return row ? toDomainReport(row) : null;
   }
 
-  async list(filter: ReportQuery) {
-    const where: Prisma.ReportWhereInput = {
-      organizationId: filter.orgId,
-      ...(filter.studentId ? { studentId: filter.studentId } : {}),
-      ...(filter.sessionId ? { sessionId: filter.sessionId } : {}),
-    };
+  async list(query: ListReportsQuery) {
+    const overlap =
+      query.from || query.to
+        ? {
+            AND: [
+              ...(query.to ? [{ fromAt: { lte: query.to } }] : []),
+              ...(query.from ? [{ toAt: { gte: query.from } }] : []),
+            ],
+          }
+        : undefined;
 
     const rows = await this.prisma.report.findMany({
-      where,
+      where: {
+        organizationId: query.orgId,
+        ...(query.studentId ? { studentId: query.studentId } : {}),
+        ...(query.sessionId ? { sessionId: query.sessionId } : {}),
+        ...(query.status ? { status: query.status as any } : {}),
+        ...(overlap ?? {}),
+      },
       orderBy: { createdAt: 'desc' },
     });
 
     return rows.map(toDomainReport);
+  }
+
+  async saveResult(input: SaveReportResultInput) {
+    const updated = await this.prisma.report.updateMany({
+      where: { id: input.id, organizationId: input.orgId },
+      data: {
+        resultUrl: input.resultUrl ?? undefined,
+        fileId: input.fileId ?? undefined,
+        status: 'GENERATED',
+      },
+    });
+
+    if (updated.count === 0) throw new NotFoundException('report not found');
+
+    const row = await this.prisma.report.findUnique({
+      where: { id: input.id },
+    });
+    return toDomainReport(row!);
+  }
+
+  async markSent(input: MarkReportSentInput) {
+    const updated = await this.prisma.report.updateMany({
+      where: { id: input.id, organizationId: input.orgId },
+      data: {
+        status: 'SENT',
+        sentAt: input.sentAt,
+      },
+    });
+
+    if (updated.count === 0) throw new NotFoundException('report not found');
+
+    const row = await this.prisma.report.findUnique({
+      where: { id: input.id },
+    });
+    return toDomainReport(row!);
   }
 }
