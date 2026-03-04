@@ -30,6 +30,12 @@ enum SubmissionStatus {
   HOLD
 }
 
+enum ReportStatus {
+  REQUESTED
+  GENERATED
+  SENT
+}
+
 model Session {
   id             String @id @default(uuid()) @db.Uuid
   organizationId String @map("organization_id") @db.Uuid
@@ -149,13 +155,26 @@ model Report {
   id             String   @id @default(uuid()) @db.Uuid
   organizationId String   @map("organization_id") @db.Uuid
 
-  studentId      String   @map("student_id") @db.Uuid
+  studentId      String   @map("student_id")
   sessionId      String?  @map("session_id") @db.Uuid
+
+  // 기간 필터(리포트가 커버하는 범위)
+  fromAt         DateTime @map("from_at")
+  toAt           DateTime @map("to_at")
+
+  // 결과물 저장(둘 중 하나면 OK)
+  resultUrl      String?  @map("result_url")
+  fileId         String?  @map("file_id")
+
+  // 상태/전송시각
+  status         ReportStatus @default(REQUESTED)
+  sentAt         DateTime?    @map("sent_at")
 
   summary        String   @db.Text
   analysis       Json?    // AI 분석 결과(JSON)
 
   createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@index([organizationId])
   @@index([studentId])
