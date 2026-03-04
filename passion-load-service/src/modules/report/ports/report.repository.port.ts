@@ -1,23 +1,47 @@
-import { Report } from '../domain/report.model';
+import { Report, ReportStatus } from '../domain/report.model';
 
 export type CreateReportInput = {
   id: string;
   orgId: string;
   studentId: string;
-  sessionId?: string | null;
+  sessionId: string | null;
+
+  fromAt: Date;
+  toAt: Date;
 
   summary: string;
-  analysis?: unknown | null;
+  analysis: unknown | null;
 };
 
-export type ReportQuery = {
+export type SaveReportResultInput = {
   orgId: string;
+  id: string;
+
+  resultUrl: string | null;
+  fileId: string | null;
+};
+
+export type MarkReportSentInput = {
+  orgId: string;
+  id: string;
+  sentAt: Date;
+};
+
+export type ListReportsQuery = {
+  orgId: string;
+
   studentId?: string;
   sessionId?: string;
+  status?: ReportStatus;
+
+  from?: Date;
+  to?: Date;
 };
 
 export interface ReportRepositoryPort {
   create(input: CreateReportInput): Promise<Report>;
-  list(filter: ReportQuery): Promise<Report[]>;
   findById(id: string): Promise<Report | null>;
+  list(query: ListReportsQuery): Promise<Report[]>;
+  saveResult(input: SaveReportResultInput): Promise<Report>;
+  markSent(input: MarkReportSentInput): Promise<Report>;
 }

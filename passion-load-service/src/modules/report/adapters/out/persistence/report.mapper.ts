@@ -7,8 +7,18 @@ export const toDomainReport = (row: PrismaReport): Report => ({
   studentId: row.studentId,
   sessionId: row.sessionId ?? undefined,
 
-  summary: row.summary ?? undefined,
+  fromAt: row.fromAt,
+  toAt: row.toAt,
+
+  resultUrl: row.resultUrl ?? undefined,
+  fileId: row.fileId ?? undefined,
+
+  status: row.status as any,
+  sentAt: row.sentAt ?? undefined,
+
+  summary: row.summary,
   analysis: (row.analysis as unknown) ?? undefined,
 
   createdAt: row.createdAt,
+  updatedAt: row.updatedAt,
 });
