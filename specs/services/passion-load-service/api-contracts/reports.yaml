@@ -1,0 +1,141 @@
+paths:
+  /api/v1/passion-load/reports:
+    post:
+      tags: [reports]
+      summary: 리포트 요청 생성
+      description: |
+        - 권한: TEACHER/ADMIN
+        - fromAt/toAt은 ISO date-time
+      security:
+        - org: []
+        - role: []
+        - user: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./components.yaml#/components/schemas/CreateReportDto
+      responses:
+        '201':
+          description: Created report
+        '400':
+          $ref: ./components.yaml#/components/responses/BadRequest
+        '403':
+          $ref: ./components.yaml#/components/responses/Forbidden
+
+    get:
+      tags: [reports]
+      summary: 리포트 목록 조회(기간 overlap)
+      description: |
+        - period overlap 기준
+        - 최소 1개 필터 필요 (없으면 400)  # swagger에 그렇게 찍혀있음
+      security:
+        - org: []
+        - role: []
+        - user: []
+      parameters:
+        - name: studentId
+          in: query
+          required: false
+          schema: { type: string }
+        - name: sessionId
+          in: query
+          required: false
+          schema: { type: string }
+        - name: fromAt
+          in: query
+          required: false
+          description: 커버 기간 시작(ISO)
+          schema: { type: string, format: date-time }
+        - name: toAt
+          in: query
+          required: false
+          description: 커버 기간 끝(ISO)
+          schema: { type: string, format: date-time }
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [REQUESTED, GENERATED, SENT]
+      responses:
+        '200':
+          description: Report list
+        '400':
+          $ref: ./components.yaml#/components/responses/BadRequest
+        '403':
+          $ref: ./components.yaml#/components/responses/Forbidden
+
+  /api/v1/passion-load/reports/{id}:
+    get:
+      tags: [reports]
+      summary: 리포트 단건 조회
+      security:
+        - org: []
+        - role: []
+        - user: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Report
+        '403':
+          $ref: ./components.yaml#/components/responses/Forbidden
+        '404':
+          $ref: ./components.yaml#/components/responses/NotFound
+
+  /api/v1/passion-load/reports/{id}/result:
+    patch:
+      tags: [reports]
+      summary: 리포트 결과 저장(resultUrl/fileId)
+      description: |
+        - resultUrl 또는 fileId 중 최소 1개 필요 (없으면 400)
+      security:
+        - org: []
+        - role: []
+        - user: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./components.yaml#/components/schemas/SaveReportResultDto
+      responses:
+        '200':
+          description: Updated report
+        '400':
+          $ref: ./components.yaml#/components/responses/BadRequest
+        '403':
+          $ref: ./components.yaml#/components/responses/Forbidden
+        '404':
+          $ref: ./components.yaml#/components/responses/NotFound
+
+  /api/v1/passion-load/reports/{id}/send:
+    post:
+      tags: [reports]
+      summary: 리포트 전송 트리거
+      security:
+        - org: []
+        - role: []
+        - user: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Sent report
+        '403':
+          $ref: ./components.yaml#/components/responses/Forbidden
+        '404':
+          $ref: ./components.yaml#/components/responses/NotFound

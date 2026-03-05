@@ -1,0 +1,53 @@
+paths:
+  /api/v1/passion-load/daily-checks:
+    post:
+      tags: [daily-checks]
+      summary: DAILY_CHECK 업서트(studentId + date)
+      description: |
+        - (studentId, date) 조합으로 upsert
+        - date는 yyyy-mm-dd
+      security:
+        - org: []
+        - role: []
+        - user: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./components.yaml#/components/schemas/UpsertDailyCheckDto
+      responses:
+        '201':
+          description: Upserted daily check
+        '400':
+          $ref: ./components.yaml#/components/responses/BadRequest
+        '403':
+          $ref: ./components.yaml#/components/responses/Forbidden
+
+    get:
+      tags: [daily-checks]
+      summary: DAILY_CHECK 목록 조회
+      description: |
+        - filters: date | studentId
+        - 최소 1개 필터 필요 (없으면 400)
+      security:
+        - org: []
+        - role: []
+        - user: []
+      parameters:
+        - name: date
+          in: query
+          required: false
+          description: yyyy-mm-dd
+          schema: { type: string, example: 2026-02-24 }
+        - name: studentId
+          in: query
+          required: false
+          schema: { type: string, example: student_123 }
+      responses:
+        '200':
+          description: Daily check list
+        '400':
+          $ref: ./components.yaml#/components/responses/BadRequest
+        '403':
+          $ref: ./components.yaml#/components/responses/Forbidden
