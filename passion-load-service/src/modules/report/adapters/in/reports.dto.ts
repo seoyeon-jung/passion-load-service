@@ -81,12 +81,12 @@ export class ListReportsQueryDto {
   @ApiPropertyOptional({ description: '커버 기간 시작(ISO)' })
   @IsOptional()
   @IsDateString()
-  from?: string;
+  fromAt?: string;
 
   @ApiPropertyOptional({ description: '커버 기간 끝(ISO)' })
   @IsOptional()
   @IsDateString()
-  to?: string;
+  toAt?: string;
 
   @ApiPropertyOptional({ enum: ReportStatusDto })
   @IsOptional()

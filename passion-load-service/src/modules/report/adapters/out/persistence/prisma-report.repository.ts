@@ -37,11 +37,11 @@ export class PrismaReportRepository implements ReportRepositoryPort {
 
   async list(query: ListReportsQuery) {
     const overlap =
-      query.from || query.to
+      query.fromAt || query.toAt
         ? {
             AND: [
-              ...(query.to ? [{ fromAt: { lte: query.to } }] : []),
-              ...(query.from ? [{ toAt: { gte: query.from } }] : []),
+              ...(query.toAt ? [{ fromAt: { lte: query.toAt } }] : []),
+              ...(query.fromAt ? [{ toAt: { gte: query.fromAt } }] : []),
             ],
           }
         : undefined;
