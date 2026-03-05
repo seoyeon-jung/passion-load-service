@@ -1,0 +1,51 @@
+paths:
+  /api/v1/passion-load/feedback:
+    post:
+      tags: [feedback]
+      summary: 피드백 생성(<=250자)
+      description: |
+        - content는 최대 250자
+      security:
+        - org: []
+        - role: []
+        - user: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./components.yaml#/components/schemas/CreateFeedbackDto
+      responses:
+        "201":
+          description: Created feedback
+        "400":
+          $ref: ./components.yaml#/components/responses/BadRequest
+        "403":
+          $ref: ./components.yaml#/components/responses/Forbidden
+
+    get:
+      tags: [feedback]
+      summary: 피드백 목록 조회
+      description: |
+        - filters: studentId | assignmentId
+        - 최소 1개 필터 필요 (없으면 400)
+      security:
+        - org: []
+        - role: []
+        - user: []
+      parameters:
+        - name: studentId
+          in: query
+          required: false
+          schema: { type: string, example: student_123 }
+        - name: assignmentId
+          in: query
+          required: false
+          schema: { type: string, example: a09a4529-5e30-49b7-80c4-142313d8a2df }
+      responses:
+        "200":
+          description: Feedback list
+        "400":
+          $ref: ./components.yaml#/components/responses/BadRequest
+        "403":
+          $ref: ./components.yaml#/components/responses/Forbidden

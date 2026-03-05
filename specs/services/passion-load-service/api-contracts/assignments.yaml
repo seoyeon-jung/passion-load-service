@@ -1,0 +1,107 @@
+paths:
+  /api/v1/passion-load/assignments:
+    post:
+      tags: [assignments]
+      summary: TASK 과제 생성
+      description: |
+        - 권한: TEACHER/ADMIN
+        - assignmentDate/dueDate는 yyyy-mm-dd
+      security:
+        - org: []
+        - role: []
+        - user: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./components.yaml#/components/schemas/CreateTaskAssignmentDto
+      responses:
+        "201":
+          description: Created TASK assignment
+        "400":
+          $ref: ./components.yaml#/components/responses/BadRequest
+        "403":
+          $ref: ./components.yaml#/components/responses/Forbidden
+
+    get:
+      tags: [assignments]
+      summary: TASK 과제 목록 조회(org 범위)
+      description: |
+        - optional filters: sessionId | studentId | date
+        - 필터가 모두 optional인 경우, 구현 정책에 따라 전체 조회 가능/불가가 결정됨(현재 swagger는 optional로 노출).
+      security:
+        - org: []
+        - role: []
+        - user: []
+      parameters:
+        - name: sessionId
+          in: query
+          required: false
+          schema: { type: string, example: 64aedc13-27eb-41c1-aee8-89694b6aa04d }
+        - name: studentId
+          in: query
+          required: false
+          schema: { type: string, example: 33333333-3333-3333-3333-333333333333 }
+        - name: date
+          in: query
+          required: false
+          description: yyyy-mm-dd
+          schema: { type: string, example: 2026-02-16 }
+      responses:
+        "200":
+          description: TASK assignment list
+        "403":
+          $ref: ./components.yaml#/components/responses/Forbidden
+
+  /api/v1/passion-load/assignments/{id}:
+    get:
+      tags: [assignments]
+      summary: TASK 과제 단건 조회
+      security:
+        - org: []
+        - role: []
+        - user: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Assignment UUID
+          schema: { type: string }
+      responses:
+        "200":
+          description: TASK assignment
+        "403":
+          $ref: ./components.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./components.yaml#/components/responses/NotFound
+
+    patch:
+      tags: [assignments]
+      summary: TASK 과제 수정
+      description: |
+        - 권한: TEACHER/ADMIN
+        - dueDate는 yyyy-mm-dd
+      security:
+        - org: []
+        - role: []
+        - user: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Assignment UUID
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./components.yaml#/components/schemas/UpdateTaskAssignmentDto
+      responses:
+        "200":
+          description: Updated TASK assignment
+        "403":
+          $ref: ./components.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./components.yaml#/components/responses/NotFound

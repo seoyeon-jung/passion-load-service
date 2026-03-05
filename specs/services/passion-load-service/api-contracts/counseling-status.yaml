@@ -1,0 +1,22 @@
+paths:
+  /api/v1/passion-load/counseling-status:
+    get:
+      tags: [counseling-status]
+      summary: 상담 상태 조회(LMS 프록시)
+      description: |
+        - LMS의 students + questions 정보를 조합해서 내려주는 프록시 성격의 API
+        - studentId로 optional filtering 가능
+      security:
+        - org: []
+        - role: []
+        - user: []
+      parameters:
+        - name: studentId
+          in: query
+          required: false
+          schema: { type: string, example: student_123 }
+      responses:
+        "200":
+          description: Counseling status list
+        "403":
+          $ref: ./components.yaml#/components/responses/Forbidden
