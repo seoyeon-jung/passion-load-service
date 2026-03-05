@@ -74,6 +74,16 @@
             "buildTarget": "@org/passion-load-service:build:production"
           }
         }
+      },
+      "test": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{workspaceRoot}/coverage/passion-load-service"
+        ],
+        "options": {
+          "jestConfig": "passion-load-service/jest.config.ts",
+          "passWithNoTests": true
+        }
       }
     }
   },
