@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  title: Passion Load Service API Contracts
+  version: 1.0.0
+  description: |
+    passion-load-service의 API 계약(OpenAPI).
+    실제 구현 Swagger(/docs-json)에서 추출한 스펙을 리소스별로 분리/정리한 문서입니다.
+
+servers:
+  - url: /
+
+tags:
+  - name: sessions
+    description: 세션
+  - name: assignments
+    description: 과제(TASK)
+  - name: daily-checks
+    description: 일별 점검(DAILY_CHECK)
+  - name: submissions
+    description: 제출
+  - name: feedback
+    description: 피드백
+  - name: reports
+    description: 리포트
+  - name: counseling-status
+    description: 상담 상태(LMS 프록시)
+
+paths:
+  /api/v1/passion-load/sessions:
+    $ref: ./sessions.yaml#/paths/~1api~1v1~1passion-load~1sessions
+  /api/v1/passion-load/sessions/{id}:
+    $ref: ./sessions.yaml#/paths/~1api~1v1~1passion-load~1sessions~1{id}
+  /api/v1/passion-load/sessions/{id}/status:
+    $ref: ./sessions.yaml#/paths/~1api~1v1~1passion-load~1sessions~1{id}~1status
+
+  /api/v1/passion-load/assignments:
+    $ref: ./assignments.yaml#/paths/~1api~1v1~1passion-load~1assignments
+  /api/v1/passion-load/assignments/{id}:
+    $ref: ./assignments.yaml#/paths/~1api~1v1~1passion-load~1assignments~1{id}
+
+  /api/v1/passion-load/daily-checks:
+    $ref: ./daily-checks.yaml#/paths/~1api~1v1~1passion-load~1daily-checks
+
+  /api/v1/passion-load/submissions:
+    $ref: ./submissions.yaml#/paths/~1api~1v1~1passion-load~1submissions
+
+  /api/v1/passion-load/feedback:
+    $ref: ./feedback.yaml#/paths/~1api~1v1~1passion-load~1feedback
+
+  /api/v1/passion-load/reports:
+    $ref: ./reports.yaml#/paths/~1api~1v1~1passion-load~1reports
+  /api/v1/passion-load/reports/{id}:
+    $ref: ./reports.yaml#/paths/~1api~1v1~1passion-load~1reports~1{id}
+  /api/v1/passion-load/reports/{id}/result:
+    $ref: ./reports.yaml#/paths/~1api~1v1~1passion-load~1reports~1{id}~1result
+  /api/v1/passion-load/reports/{id}/send:
+    $ref: ./reports.yaml#/paths/~1api~1v1~1passion-load~1reports~1{id}~1send
+
+  /api/v1/passion-load/counseling-status:
+    $ref: ./counseling-status.yaml#/paths/~1api~1v1~1passion-load~1counseling-status
+
+components:
+  $ref: ./components.yaml#/components

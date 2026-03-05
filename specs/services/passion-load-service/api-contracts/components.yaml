@@ -1,0 +1,309 @@
+components:
+  securitySchemes:
+    org:
+      type: apiKey
+      in: header
+      name: x-organization-id
+      description: 조직 UUID
+    role:
+      type: apiKey
+      in: header
+      name: x-user-role
+      description: 사용자 역할 (TEACHER | ADMIN 등, 서버 구현 기준)
+    user:
+      type: apiKey
+      in: header
+      name: x-user-id
+      description: 사용자 ID
+
+  responses:
+    BadRequest:
+      description: |
+        400 Bad Request
+        - 입력값 검증 실패(날짜 포맷, UUID 등)
+        - 필수 쿼리 누락(필터 최소 1개 요구)
+        - 비즈니스 규칙 위반(예: 상태 전이 불가)
+    Forbidden:
+      description: |
+        403 Forbidden
+        - 권한 부족(TEACHER/ADMIN 필요 등)
+        - 인증/헤더 컨텍스트 누락
+    NotFound:
+      description: |
+        404 Not Found
+        - 리소스가 존재하지 않음
+        - org scope 위반(다른 org 리소스 접근)
+
+  schemas:
+    # ---- Sessions ----
+    CreateSessionDto:
+      type: object
+      required: [title, date]
+      properties:
+        title:
+          type: string
+          maxLength: 100
+          example: 2주차 세션
+        date:
+          type: string
+          description: yyyy-mm-dd
+          example: 2026-02-16
+
+    UpdateSessionDto:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 100
+          example: 제목 수정
+        date:
+          type: string
+          description: yyyy-mm-dd
+          example: 2026-02-17
+
+    UpdateSessionStatusDto:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [PLANNED, ACTIVE, DONE]
+          example: ACTIVE
+
+    SessionResponseDto:
+      type: object
+      required: [id, orgId, title, date, status, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: 1de46e1a-2850-4842-8042-c620f58f9233
+        orgId:
+          type: string
+          example: 11111111-1111-1111-1111-111111111111
+        title:
+          type: string
+          example: 2주차 세션
+        date:
+          type: string
+          example: 2026-02-16
+        status:
+          type: string
+          enum: [PLANNED, ACTIVE, DONE]
+          example: PLANNED
+        createdAt:
+          type: string
+          format: date-time
+          example: 2026-02-15T11:22:35.963Z
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2026-02-15T11:22:35.963Z
+
+    # ---- Assignments (TASK) ----
+    CreateTaskAssignmentDto:
+      type: object
+      required: [sessionId, studentId, title, body, assignmentDate]
+      properties:
+        sessionId:
+          type: string
+          description: Session UUID
+          example: 64aedc13-27eb-41c1-aee8-89694b6aa04d
+        studentId:
+          type: string
+          description: Student UUID (LMS)
+          example: 33333333-3333-3333-3333-333333333333
+        title:
+          type: string
+          maxLength: 100
+          example: 수학 과제
+        body:
+          type: string
+          example: 교재 p.10~12 풀기
+        assignmentDate:
+          type: string
+          description: yyyy-mm-dd
+          example: 2026-02-16
+        dueDate:
+          type: string
+          description: yyyy-mm-dd (optional)
+          nullable: true
+          example: 2026-02-17
+        status:
+          type: string
+          nullable: true
+          enum: [SCHEDULED, COMPLETED, INCOMPLETE]
+        incompletionReason:
+          type: string
+          nullable: true
+          example: null
+        subject:
+          type: string
+          nullable: true
+          example: null
+        categoryType:
+          type: string
+          nullable: true
+          example: null
+        difficulty:
+          type: string
+          nullable: true
+          example: null
+        estimatedMinutes:
+          type: integer
+          nullable: true
+          example: 30
+
+    UpdateTaskAssignmentDto:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: true
+          maxLength: 100
+          example: 제목 수정
+        body:
+          type: string
+          nullable: true
+          example: 본문 수정
+        dueDate:
+          type: string
+          nullable: true
+          description: yyyy-mm-dd
+          example: 2026-02-18
+        status:
+          type: string
+          nullable: true
+          enum: [SCHEDULED, COMPLETED, INCOMPLETE]
+        incompletionReason:
+          type: string
+          nullable: true
+          example: null
+        subject:
+          type: string
+          nullable: true
+          example: null
+        categoryType:
+          type: string
+          nullable: true
+          example: null
+        difficulty:
+          type: string
+          nullable: true
+          example: null
+        estimatedMinutes:
+          type: integer
+          nullable: true
+          example: 45
+
+    # ---- Daily Checks ----
+    UpsertDailyCheckDto:
+      type: object
+      required: [studentId, date, checked, contactMade]
+      properties:
+        studentId:
+          type: string
+          description: LMS student id
+          example: student_123
+        date:
+          type: string
+          description: yyyy-mm-dd
+          example: 2026-02-24
+        checked:
+          type: boolean
+          example: true
+        contactMade:
+          type: boolean
+          example: false
+        checkMemo:
+          type: string
+          nullable: true
+          example: 연락 시도했으나 부재
+
+    # ---- Submissions ----
+    UpsertSubmissionDto:
+      type: object
+      required: [assignmentId, studentId, status]
+      properties:
+        assignmentId:
+          type: string
+          format: uuid
+          example: b7e61e3c-8c2e-4c9e-9e1e-123456789abc
+        studentId:
+          type: string
+          example: LMS_STUDENT_0001
+        status:
+          type: string
+          enum: [NOT_STARTED, IN_PROGRESS, DONE, HOLD]
+          example: DONE
+        reason:
+          type: string
+          nullable: true
+          example: 컨디션 난조
+        scheduleNote:
+          type: string
+          nullable: true
+          example: 2/20까지 보충 예정
+
+    # ---- Feedback ----
+    CreateFeedbackDto:
+      type: object
+      required: [studentId, content]
+      properties:
+        studentId:
+          type: string
+          example: student_123
+        assignmentId:
+          type: string
+          format: uuid
+          nullable: true
+          example: a09a4529-5e30-49b7-80c4-142313d8a2df
+        content:
+          type: string
+          maxLength: 250
+          example: 오늘 과제 수행이 좋아요. 다음 단계로 넘어가도 됩니다.
+
+    # ---- Reports ----
+    CreateReportDto:
+      type: object
+      required: [studentId, fromAt, toAt, summary]
+      properties:
+        studentId:
+          type: string
+          description: 학생 UUID
+          example: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+        sessionId:
+          type: string
+          format: uuid
+          nullable: true
+          description: 세션 UUID
+          example: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+        fromAt:
+          type: string
+          format: date-time
+          description: 리포트 커버 시작(ISO)
+          example: 2026-03-01T00:00:00.000Z
+        toAt:
+          type: string
+          format: date-time
+          description: 리포트 커버 끝(ISO)
+          example: 2026-03-07T23:59:59.999Z
+        summary:
+          type: string
+          description: 요약 텍스트
+        analysis:
+          type: object
+          nullable: true
+          description: AI 분석 결과(JSON)
+          additionalProperties: true
+
+    SaveReportResultDto:
+      type: object
+      properties:
+        resultUrl:
+          type: string
+          nullable: true
+          example: https://.../report.pdf
+        fileId:
+          type: string
+          nullable: true
+          example: file_123
