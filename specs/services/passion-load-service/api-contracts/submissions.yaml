@@ -16,11 +16,11 @@ paths:
             schema:
               $ref: ./components.yaml#/components/schemas/UpsertSubmissionDto
       responses:
-        "201":
+        '201':
           description: Upserted submission
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
 
     get:
@@ -37,7 +37,8 @@ paths:
         - name: assignmentId
           in: query
           required: false
-          schema: { type: string, example: a09a4529-5e30-49b7-80c4-142313d8a2df }
+          schema:
+            { type: string, example: a09a4529-5e30-49b7-80c4-142313d8a2df }
         - name: studentId
           in: query
           required: false
@@ -48,9 +49,9 @@ paths:
           description: yyyy-mm-dd
           schema: { type: string, example: 2026-02-16 }
       responses:
-        "200":
+        '200':
           description: Submission list
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden

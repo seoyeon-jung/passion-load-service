@@ -1,1 +1,981 @@
-{"openapi":"3.0.0","paths":{"/":{"get":{"operationId":"AppController_getData","parameters":[],"responses":{"200":{"description":""}},"tags":["App"]}},"/health":{"get":{"operationId":"HealthController_getHealth","parameters":[],"responses":{"200":{"description":""}},"tags":["Health"]}},"/lms/{orgId}/teachers":{"get":{"operationId":"LmsDebugController_getTeachers","parameters":[{"name":"orgId","required":true,"in":"path","schema":{"type":"string"}}],"responses":{"200":{"description":""}},"tags":["LmsDebug"]}},"/lms/{orgId}/students":{"get":{"operationId":"LmsDebugController_getStudents","parameters":[{"name":"orgId","required":true,"in":"path","schema":{"type":"string"}}],"responses":{"200":{"description":""}},"tags":["LmsDebug"]}},"/debug/sessions":{"post":{"operationId":"DebugController_createSession","parameters":[],"responses":{"201":{"description":""}},"tags":["Debug"]}},"/debug/sessions/{id}":{"get":{"operationId":"DebugController_getSession","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"string"}}],"responses":{"200":{"description":""}},"tags":["Debug"]}},"/debug/assignments/task":{"post":{"operationId":"DebugController_createTask","parameters":[],"responses":{"201":{"description":""}},"tags":["Debug"]}},"/debug/assignments/daily-check":{"post":{"operationId":"DebugController_upsertDailyCheck","parameters":[],"responses":{"201":{"description":""}},"tags":["Debug"]}},"/debug/assignments":{"get":{"operationId":"DebugController_listAssignments","parameters":[{"name":"orgId","required":true,"in":"query","schema":{"type":"string"}},{"name":"studentId","required":true,"in":"query","schema":{"type":"string"}},{"name":"sessionId","required":true,"in":"query","schema":{"type":"string"}},{"name":"date","required":true,"in":"query","schema":{"type":"string"}}],"responses":{"200":{"description":""}},"tags":["Debug"]}},"/debug/submissions/upsert":{"post":{"operationId":"DebugController_upsertSubmission","parameters":[],"responses":{"201":{"description":""}},"tags":["Debug"]}},"/debug/feedbacks":{"post":{"operationId":"DebugController_createFeedback","parameters":[],"responses":{"201":{"description":""}},"tags":["Debug"]}},"/debug/reports":{"post":{"operationId":"DebugController_createReport","parameters":[],"responses":{"201":{"description":""}},"tags":["Debug"]}},"/debug/reports/{id}":{"get":{"operationId":"DebugController_getReport","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"string"}}],"responses":{"200":{"description":""}},"tags":["Debug"]}},"/api/v1/passion-load/sessions":{"post":{"operationId":"SessionsController_create","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateSessionDto"}}}},"responses":{"201":{"description":"Created session","content":{"application/json":{"schema":{"$ref":"#/components/schemas/SessionResponseDto"}}}},"400":{"description":"Validation error (date format etc.)"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Create session","tags":["sessions"]},"get":{"operationId":"SessionsController_list","parameters":[],"responses":{"200":{"description":"Session list","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/SessionResponseDto"}}}}}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"List sessions by organization","tags":["sessions"]}},"/api/v1/passion-load/sessions/{id}":{"get":{"operationId":"SessionsController_get","parameters":[{"name":"id","required":true,"in":"path","description":"Session UUID","schema":{"type":"string"}}],"responses":{"200":{"description":"Session","content":{"application/json":{"schema":{"$ref":"#/components/schemas/SessionResponseDto"}}}},"400":{"description":"Invalid UUID / bad request"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Get session by id","tags":["sessions"]},"patch":{"operationId":"SessionsController_update","parameters":[{"name":"id","required":true,"in":"path","description":"Session UUID","schema":{"type":"string"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateSessionDto"}}}},"responses":{"200":{"description":"Updated session","content":{"application/json":{"schema":{"$ref":"#/components/schemas/SessionResponseDto"}}}},"400":{"description":"Validation error (date format etc.)"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Update session (title/date)","tags":["sessions"]}},"/api/v1/passion-load/sessions/{id}/status":{"patch":{"operationId":"SessionsController_updateStatus","parameters":[{"name":"id","required":true,"in":"path","description":"Session UUID","schema":{"type":"string"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateSessionStatusDto"}}}},"responses":{"200":{"description":"Updated session","content":{"application/json":{"schema":{"$ref":"#/components/schemas/SessionResponseDto"}}}},"400":{"description":"Invalid status transition"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Update session status (PLANNED -> ACTIVE -> DONE)","tags":["sessions"]}},"/api/v1/passion-load/assignments":{"post":{"operationId":"AssignmentsController_createTask","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateTaskAssignmentDto"}}}},"responses":{"201":{"description":"Created TASK assignment"},"400":{"description":"Validation error / session mismatch"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Create TASK assignment","tags":["assignments"]},"get":{"operationId":"AssignmentsController_list","parameters":[{"name":"sessionId","required":false,"in":"query","schema":{"example":"64aedc13-27eb-41c1-aee8-89694b6aa04d","type":"string"}},{"name":"studentId","required":false,"in":"query","schema":{"example":"33333333-3333-3333-3333-333333333333","type":"string"}},{"name":"date","required":false,"in":"query","description":"yyyy-mm-dd","schema":{"example":"2026-02-16","type":"string"}}],"responses":{"200":{"description":"TASK assignment list"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"List TASK assignments (org scope, optional filters)","tags":["assignments"]}},"/api/v1/passion-load/assignments/{id}":{"get":{"operationId":"AssignmentsController_get","parameters":[{"name":"id","required":true,"in":"path","description":"Assignment UUID","schema":{"type":"string"}}],"responses":{"200":{"description":"TASK assignment"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Get TASK assignment by id","tags":["assignments"]},"patch":{"operationId":"AssignmentsController_update","parameters":[{"name":"id","required":true,"in":"path","description":"Assignment UUID","schema":{"type":"string"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateTaskAssignmentDto"}}}},"responses":{"200":{"description":"Updated TASK assignment"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Update TASK assignment","tags":["assignments"]}},"/api/v1/passion-load/daily-checks":{"post":{"operationId":"DailyChecksController_upsert","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpsertDailyCheckDto"}}}},"responses":{"201":{"description":"Upserted daily check"},"400":{"description":"Validation error"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Upsert DAILY_CHECK (studentId + date)","tags":["daily-checks"]},"get":{"operationId":"DailyChecksController_list","parameters":[{"name":"date","required":false,"in":"query","description":"yyyy-mm-dd","schema":{"example":"2026-02-24","type":"string"}},{"name":"studentId","required":false,"in":"query","schema":{"example":"student_123","type":"string"}}],"responses":{"200":{"description":"Daily check list"},"400":{"description":"At least one filter required"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"List DAILY_CHECK (filters: date | studentId)","tags":["daily-checks"]}},"/api/v1/passion-load/submissions":{"post":{"operationId":"SubmissionController_upsert","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpsertSubmissionDto"}}}},"responses":{"201":{"description":"Upserted submission"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Upsert submission","tags":["submissions"]},"get":{"operationId":"SubmissionController_list","parameters":[{"name":"assignmentId","required":false,"in":"query","schema":{"example":"a09a4529-5e30-49b7-80c4-142313d8a2df","type":"string"}},{"name":"studentId","required":false,"in":"query","schema":{"example":"LMS_STUDENT_0001","type":"string"}},{"name":"date","required":false,"in":"query","schema":{"example":"2026-02-16","type":"string"}}],"responses":{"200":{"description":"Submission list"},"400":{"description":"At least one filter required"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"List submissions (filters: assignmentId | studentId | date)","tags":["submissions"]}},"/api/v1/passion-load/feedback":{"post":{"operationId":"FeedbacksController_create","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateFeedbackDto"}}}},"responses":{"201":{"description":"Created feedback"},"400":{"description":"Validation error / content too long"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Create feedback (<= 250 chars)","tags":["feedback"]},"get":{"operationId":"FeedbacksController_list","parameters":[{"name":"studentId","required":false,"in":"query","schema":{"example":"student_123","type":"string"}},{"name":"assignmentId","required":false,"in":"query","schema":{"example":"a09a4529-5e30-49b7-80c4-142313d8a2df","type":"string"}}],"responses":{"200":{"description":"Feedback list"},"400":{"description":"At least one filter required"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"List feedback (filters: studentId | assignmentId)","tags":["feedback"]}},"/api/v1/passion-load/counseling-status":{"get":{"operationId":"CounselingStatusController_list","parameters":[{"name":"studentId","required":false,"in":"query","schema":{"example":"student_123","type":"string"}}],"responses":{"200":{"description":"Counseling status list"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Counseling status (LMS proxy: students + questions)","tags":["counseling-status"]}},"/api/v1/passion-load/reports":{"post":{"operationId":"ReportsController_create","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateReportDto"}}}},"responses":{"201":{"description":"Created report"},"400":{"description":"Validation error"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Create report request","tags":["reports"]},"get":{"operationId":"ReportsController_list","parameters":[{"name":"studentId","required":false,"in":"query","schema":{"type":"string"}},{"name":"sessionId","required":false,"in":"query","schema":{"type":"string"}},{"name":"fromAt","required":false,"in":"query","description":"커버 기간 시작(ISO)","schema":{"type":"string"}},{"name":"toAt","required":false,"in":"query","description":"커버 기간 끝(ISO)","schema":{"type":"string"}},{"name":"status","required":false,"in":"query","schema":{"type":"string","enum":["REQUESTED","GENERATED","SENT"]}}],"responses":{"200":{"description":"Report list"},"400":{"description":"At least one filter required"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"List reports (period overlap)","tags":["reports"]}},"/api/v1/passion-load/reports/{id}":{"get":{"operationId":"ReportsController_get","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"string"}}],"responses":{"200":{"description":"Report"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Get report by id","tags":["reports"]}},"/api/v1/passion-load/reports/{id}/result":{"patch":{"operationId":"ReportsController_saveResult","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"string"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/SaveReportResultDto"}}}},"responses":{"200":{"description":"Updated report"},"400":{"description":"resultUrl or fileId required"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Save report result (url/fileId)","tags":["reports"]}},"/api/v1/passion-load/reports/{id}/send":{"post":{"operationId":"ReportsController_send","parameters":[{"name":"id","required":true,"in":"path","schema":{"type":"string"}}],"responses":{"200":{"description":"Sent report"},"403":{"description":"Need TEACHER/ADMIN"}},"security":[{"user":[]},{"role":[]},{"org":[]}],"summary":"Send report (trigger)","tags":["reports"]}}},"info":{"title":"Passion Load Service","description":"passion-load-service API","version":"1.0.0","contact":{}},"tags":[],"servers":[],"components":{"securitySchemes":{"org":{"type":"apiKey","in":"header","name":"x-organization-id"},"role":{"type":"apiKey","in":"header","name":"x-user-role"},"user":{"type":"apiKey","in":"header","name":"x-user-id"}},"schemas":{"CreateSessionDto":{"type":"object","properties":{"title":{"type":"string","example":"2주차 세션","maxLength":100},"date":{"type":"string","example":"2026-02-16","description":"yyyy-mm-dd"}},"required":["title","date"]},"SessionResponseDto":{"type":"object","properties":{"id":{"type":"string","example":"1de46e1a-2850-4842-8042-c620f58f9233"},"orgId":{"type":"string","example":"11111111-1111-1111-1111-111111111111"},"title":{"type":"string","example":"2주차 세션"},"date":{"type":"string","example":"2026-02-16"},"status":{"type":"string","enum":["PLANNED","ACTIVE","DONE"],"example":"PLANNED"},"createdAt":{"type":"string","example":"2026-02-15T11:22:35.963Z"},"updatedAt":{"type":"string","example":"2026-02-15T11:22:35.963Z"}},"required":["id","orgId","title","date","status","createdAt","updatedAt"]},"UpdateSessionDto":{"type":"object","properties":{"title":{"type":"string","example":"제목 수정"},"date":{"type":"string","example":"2026-02-17","description":"yyyy-mm-dd"}}},"UpdateSessionStatusDto":{"type":"object","properties":{"status":{"type":"string","example":"ACTIVE","enum":["PLANNED","ACTIVE","DONE"]}},"required":["status"]},"CreateTaskAssignmentDto":{"type":"object","properties":{"sessionId":{"type":"string","example":"64aedc13-27eb-41c1-aee8-89694b6aa04d","description":"Session UUID"},"studentId":{"type":"string","example":"33333333-3333-3333-3333-333333333333","description":"Student UUID (LMS)"},"title":{"type":"string","example":"수학 과제","maxLength":100},"body":{"type":"string","example":"교재 p.10~12 풀기"},"assignmentDate":{"type":"string","example":"2026-02-16","description":"yyyy-mm-dd"},"dueDate":{"type":"string","example":"2026-02-17","description":"yyyy-mm-dd (optional)"},"status":{"type":"string","enum":["SCHEDULED","COMPLETED","INCOMPLETE"]},"incompletionReason":{"type":"object","example":null},"subject":{"type":"object","example":null},"categoryType":{"type":"object","example":null},"difficulty":{"type":"object","example":null},"estimatedMinutes":{"type":"object","example":30}},"required":["sessionId","studentId","title","body","assignmentDate"]},"UpdateTaskAssignmentDto":{"type":"object","properties":{"title":{"type":"object","example":"제목 수정","maxLength":100},"body":{"type":"object","example":"본문 수정"},"dueDate":{"type":"object","example":"2026-02-18","description":"yyyy-mm-dd"},"status":{"type":"string","enum":["SCHEDULED","COMPLETED","INCOMPLETE"]},"incompletionReason":{"type":"object","example":null},"subject":{"type":"object","example":null},"categoryType":{"type":"object","example":null},"difficulty":{"type":"object","example":null},"estimatedMinutes":{"type":"object","example":45}}},"UpsertDailyCheckDto":{"type":"object","properties":{"studentId":{"type":"string","example":"student_123","description":"LMS student id"},"date":{"type":"string","example":"2026-02-24","description":"yyyy-mm-dd"},"checked":{"type":"boolean","example":true},"contactMade":{"type":"boolean","example":false},"checkMemo":{"type":"object","example":"연락 시도했으나 부재"}},"required":["studentId","date","checked","contactMade"]},"UpsertSubmissionDto":{"type":"object","properties":{"assignmentId":{"type":"string","example":"b7e61e3c-8c2e-4c9e-9e1e-123456789abc"},"studentId":{"type":"string","example":"LMS_STUDENT_0001"},"status":{"type":"string","enum":["NOT_STARTED","IN_PROGRESS","DONE","HOLD"],"example":"DONE"},"reason":{"type":"string","example":"컨디션 난조"},"scheduleNote":{"type":"string","example":"2/20까지 보충 예정"}},"required":["assignmentId","studentId","status"]},"CreateFeedbackDto":{"type":"object","properties":{"studentId":{"type":"string","example":"student_123"},"assignmentId":{"type":"string","example":"a09a4529-5e30-49b7-80c4-142313d8a2df"},"content":{"type":"string","maxLength":250,"example":"오늘 과제 수행이 좋아요. 다음 단계로 넘어가도 됩니다."}},"required":["studentId","content"]},"CreateReportDto":{"type":"object","properties":{"studentId":{"type":"string","description":"학생 UUID","example":"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"},"sessionId":{"type":"string","description":"세션 UUID","example":"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"},"fromAt":{"type":"string","description":"리포트 커버 시작(ISO)","example":"2026-03-01T00:00:00.000Z"},"toAt":{"type":"string","description":"리포트 커버 끝(ISO)","example":"2026-03-07T23:59:59.999Z"},"summary":{"type":"string","description":"요약 텍스트"},"analysis":{"type":"object","description":"AI 분석 결과(JSON)","additionalProperties":true}},"required":["studentId","fromAt","toAt","summary"]},"SaveReportResultDto":{"type":"object","properties":{"resultUrl":{"type":"string","example":"https://.../report.pdf"},"fileId":{"type":"string","example":"file_123"}}}}}}
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getData",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["App"]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "HealthController_getHealth",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Health"]
+      }
+    },
+    "/lms/{orgId}/teachers": {
+      "get": {
+        "operationId": "LmsDebugController_getTeachers",
+        "parameters": [
+          {
+            "name": "orgId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["LmsDebug"]
+      }
+    },
+    "/lms/{orgId}/students": {
+      "get": {
+        "operationId": "LmsDebugController_getStudents",
+        "parameters": [
+          {
+            "name": "orgId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["LmsDebug"]
+      }
+    },
+    "/debug/sessions": {
+      "post": {
+        "operationId": "DebugController_createSession",
+        "parameters": [],
+        "responses": { "201": { "description": "" } },
+        "tags": ["Debug"]
+      }
+    },
+    "/debug/sessions/{id}": {
+      "get": {
+        "operationId": "DebugController_getSession",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Debug"]
+      }
+    },
+    "/debug/assignments/task": {
+      "post": {
+        "operationId": "DebugController_createTask",
+        "parameters": [],
+        "responses": { "201": { "description": "" } },
+        "tags": ["Debug"]
+      }
+    },
+    "/debug/assignments/daily-check": {
+      "post": {
+        "operationId": "DebugController_upsertDailyCheck",
+        "parameters": [],
+        "responses": { "201": { "description": "" } },
+        "tags": ["Debug"]
+      }
+    },
+    "/debug/assignments": {
+      "get": {
+        "operationId": "DebugController_listAssignments",
+        "parameters": [
+          {
+            "name": "orgId",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "studentId",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "sessionId",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "date",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Debug"]
+      }
+    },
+    "/debug/submissions/upsert": {
+      "post": {
+        "operationId": "DebugController_upsertSubmission",
+        "parameters": [],
+        "responses": { "201": { "description": "" } },
+        "tags": ["Debug"]
+      }
+    },
+    "/debug/feedbacks": {
+      "post": {
+        "operationId": "DebugController_createFeedback",
+        "parameters": [],
+        "responses": { "201": { "description": "" } },
+        "tags": ["Debug"]
+      }
+    },
+    "/debug/reports": {
+      "post": {
+        "operationId": "DebugController_createReport",
+        "parameters": [],
+        "responses": { "201": { "description": "" } },
+        "tags": ["Debug"]
+      }
+    },
+    "/debug/reports/{id}": {
+      "get": {
+        "operationId": "DebugController_getReport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Debug"]
+      }
+    },
+    "/api/v1/passion-load/sessions": {
+      "post": {
+        "operationId": "SessionsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateSessionDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionResponseDto" }
+              }
+            }
+          },
+          "400": { "description": "Validation error (date format etc.)" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Create session",
+        "tags": ["sessions"]
+      },
+      "get": {
+        "operationId": "SessionsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Session list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SessionResponseDto" }
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "List sessions by organization",
+        "tags": ["sessions"]
+      }
+    },
+    "/api/v1/passion-load/sessions/{id}": {
+      "get": {
+        "operationId": "SessionsController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Session UUID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionResponseDto" }
+              }
+            }
+          },
+          "400": { "description": "Invalid UUID / bad request" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Get session by id",
+        "tags": ["sessions"]
+      },
+      "patch": {
+        "operationId": "SessionsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Session UUID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateSessionDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionResponseDto" }
+              }
+            }
+          },
+          "400": { "description": "Validation error (date format etc.)" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Update session (title/date)",
+        "tags": ["sessions"]
+      }
+    },
+    "/api/v1/passion-load/sessions/{id}/status": {
+      "patch": {
+        "operationId": "SessionsController_updateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Session UUID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSessionStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionResponseDto" }
+              }
+            }
+          },
+          "400": { "description": "Invalid status transition" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Update session status (PLANNED -> ACTIVE -> DONE)",
+        "tags": ["sessions"]
+      }
+    },
+    "/api/v1/passion-load/assignments": {
+      "post": {
+        "operationId": "AssignmentsController_createTask",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTaskAssignmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created TASK assignment" },
+          "400": { "description": "Validation error / session mismatch" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Create TASK assignment",
+        "tags": ["assignments"]
+      },
+      "get": {
+        "operationId": "AssignmentsController_list",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "64aedc13-27eb-41c1-aee8-89694b6aa04d",
+              "type": "string"
+            }
+          },
+          {
+            "name": "studentId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "33333333-3333-3333-3333-333333333333",
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "description": "yyyy-mm-dd",
+            "schema": { "example": "2026-02-16", "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "TASK assignment list" } },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "List TASK assignments (org scope, optional filters)",
+        "tags": ["assignments"]
+      }
+    },
+    "/api/v1/passion-load/assignments/{id}": {
+      "get": {
+        "operationId": "AssignmentsController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Assignment UUID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "TASK assignment" } },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Get TASK assignment by id",
+        "tags": ["assignments"]
+      },
+      "patch": {
+        "operationId": "AssignmentsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Assignment UUID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTaskAssignmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Updated TASK assignment" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Update TASK assignment",
+        "tags": ["assignments"]
+      }
+    },
+    "/api/v1/passion-load/daily-checks": {
+      "post": {
+        "operationId": "DailyChecksController_upsert",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpsertDailyCheckDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Upserted daily check" },
+          "400": { "description": "Validation error" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Upsert DAILY_CHECK (studentId + date)",
+        "tags": ["daily-checks"]
+      },
+      "get": {
+        "operationId": "DailyChecksController_list",
+        "parameters": [
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "description": "yyyy-mm-dd",
+            "schema": { "example": "2026-02-24", "type": "string" }
+          },
+          {
+            "name": "studentId",
+            "required": false,
+            "in": "query",
+            "schema": { "example": "student_123", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Daily check list" },
+          "400": { "description": "At least one filter required" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "List DAILY_CHECK (filters: date | studentId)",
+        "tags": ["daily-checks"]
+      }
+    },
+    "/api/v1/passion-load/submissions": {
+      "post": {
+        "operationId": "SubmissionController_upsert",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpsertSubmissionDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Upserted submission" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Upsert submission",
+        "tags": ["submissions"]
+      },
+      "get": {
+        "operationId": "SubmissionController_list",
+        "parameters": [
+          {
+            "name": "assignmentId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "a09a4529-5e30-49b7-80c4-142313d8a2df",
+              "type": "string"
+            }
+          },
+          {
+            "name": "studentId",
+            "required": false,
+            "in": "query",
+            "schema": { "example": "LMS_STUDENT_0001", "type": "string" }
+          },
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "schema": { "example": "2026-02-16", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Submission list" },
+          "400": { "description": "At least one filter required" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "List submissions (filters: assignmentId | studentId | date)",
+        "tags": ["submissions"]
+      }
+    },
+    "/api/v1/passion-load/feedback": {
+      "post": {
+        "operationId": "FeedbacksController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateFeedbackDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created feedback" },
+          "400": { "description": "Validation error / content too long" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Create feedback (<= 250 chars)",
+        "tags": ["feedback"]
+      },
+      "get": {
+        "operationId": "FeedbacksController_list",
+        "parameters": [
+          {
+            "name": "studentId",
+            "required": false,
+            "in": "query",
+            "schema": { "example": "student_123", "type": "string" }
+          },
+          {
+            "name": "assignmentId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "a09a4529-5e30-49b7-80c4-142313d8a2df",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Feedback list" },
+          "400": { "description": "At least one filter required" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "List feedback (filters: studentId | assignmentId)",
+        "tags": ["feedback"]
+      }
+    },
+    "/api/v1/passion-load/counseling-status": {
+      "get": {
+        "operationId": "CounselingStatusController_list",
+        "parameters": [
+          {
+            "name": "studentId",
+            "required": false,
+            "in": "query",
+            "schema": { "example": "student_123", "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Counseling status list" } },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Counseling status (LMS proxy: students + questions)",
+        "tags": ["counseling-status"]
+      }
+    },
+    "/api/v1/passion-load/reports": {
+      "post": {
+        "operationId": "ReportsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateReportDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created report" },
+          "400": { "description": "Validation error" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Create report request",
+        "tags": ["reports"]
+      },
+      "get": {
+        "operationId": "ReportsController_list",
+        "parameters": [
+          {
+            "name": "studentId",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "sessionId",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "fromAt",
+            "required": false,
+            "in": "query",
+            "description": "커버 기간 시작(ISO)",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "toAt",
+            "required": false,
+            "in": "query",
+            "description": "커버 기간 끝(ISO)",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["REQUESTED", "GENERATED", "SENT"]
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Report list" },
+          "400": { "description": "At least one filter required" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "List reports (period overlap)",
+        "tags": ["reports"]
+      }
+    },
+    "/api/v1/passion-load/reports/{id}": {
+      "get": {
+        "operationId": "ReportsController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Report" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Get report by id",
+        "tags": ["reports"]
+      }
+    },
+    "/api/v1/passion-load/reports/{id}/result": {
+      "patch": {
+        "operationId": "ReportsController_saveResult",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SaveReportResultDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Updated report" },
+          "400": { "description": "resultUrl or fileId required" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Save report result (url/fileId)",
+        "tags": ["reports"]
+      }
+    },
+    "/api/v1/passion-load/reports/{id}/send": {
+      "post": {
+        "operationId": "ReportsController_send",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Sent report" },
+          "403": { "description": "Need TEACHER/ADMIN" }
+        },
+        "security": [{ "user": [] }, { "role": [] }, { "org": [] }],
+        "summary": "Send report (trigger)",
+        "tags": ["reports"]
+      }
+    }
+  },
+  "info": {
+    "title": "Passion Load Service",
+    "description": "passion-load-service API",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "org": { "type": "apiKey", "in": "header", "name": "x-organization-id" },
+      "role": { "type": "apiKey", "in": "header", "name": "x-user-role" },
+      "user": { "type": "apiKey", "in": "header", "name": "x-user-id" }
+    },
+    "schemas": {
+      "CreateSessionDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "2주차 세션",
+            "maxLength": 100
+          },
+          "date": {
+            "type": "string",
+            "example": "2026-02-16",
+            "description": "yyyy-mm-dd"
+          }
+        },
+        "required": ["title", "date"]
+      },
+      "SessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "1de46e1a-2850-4842-8042-c620f58f9233"
+          },
+          "orgId": {
+            "type": "string",
+            "example": "11111111-1111-1111-1111-111111111111"
+          },
+          "title": { "type": "string", "example": "2주차 세션" },
+          "date": { "type": "string", "example": "2026-02-16" },
+          "status": {
+            "type": "string",
+            "enum": ["PLANNED", "ACTIVE", "DONE"],
+            "example": "PLANNED"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2026-02-15T11:22:35.963Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2026-02-15T11:22:35.963Z"
+          }
+        },
+        "required": [
+          "id",
+          "orgId",
+          "title",
+          "date",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateSessionDto": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "example": "제목 수정" },
+          "date": {
+            "type": "string",
+            "example": "2026-02-17",
+            "description": "yyyy-mm-dd"
+          }
+        }
+      },
+      "UpdateSessionStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ACTIVE",
+            "enum": ["PLANNED", "ACTIVE", "DONE"]
+          }
+        },
+        "required": ["status"]
+      },
+      "CreateTaskAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "example": "64aedc13-27eb-41c1-aee8-89694b6aa04d",
+            "description": "Session UUID"
+          },
+          "studentId": {
+            "type": "string",
+            "example": "33333333-3333-3333-3333-333333333333",
+            "description": "Student UUID (LMS)"
+          },
+          "title": {
+            "type": "string",
+            "example": "수학 과제",
+            "maxLength": 100
+          },
+          "body": { "type": "string", "example": "교재 p.10~12 풀기" },
+          "assignmentDate": {
+            "type": "string",
+            "example": "2026-02-16",
+            "description": "yyyy-mm-dd"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2026-02-17",
+            "description": "yyyy-mm-dd (optional)"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["SCHEDULED", "COMPLETED", "INCOMPLETE"]
+          },
+          "incompletionReason": { "type": "object", "example": null },
+          "subject": { "type": "object", "example": null },
+          "categoryType": { "type": "object", "example": null },
+          "difficulty": { "type": "object", "example": null },
+          "estimatedMinutes": { "type": "object", "example": 30 }
+        },
+        "required": [
+          "sessionId",
+          "studentId",
+          "title",
+          "body",
+          "assignmentDate"
+        ]
+      },
+      "UpdateTaskAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "object",
+            "example": "제목 수정",
+            "maxLength": 100
+          },
+          "body": { "type": "object", "example": "본문 수정" },
+          "dueDate": {
+            "type": "object",
+            "example": "2026-02-18",
+            "description": "yyyy-mm-dd"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["SCHEDULED", "COMPLETED", "INCOMPLETE"]
+          },
+          "incompletionReason": { "type": "object", "example": null },
+          "subject": { "type": "object", "example": null },
+          "categoryType": { "type": "object", "example": null },
+          "difficulty": { "type": "object", "example": null },
+          "estimatedMinutes": { "type": "object", "example": 45 }
+        }
+      },
+      "UpsertDailyCheckDto": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "example": "student_123",
+            "description": "LMS student id"
+          },
+          "date": {
+            "type": "string",
+            "example": "2026-02-24",
+            "description": "yyyy-mm-dd"
+          },
+          "checked": { "type": "boolean", "example": true },
+          "contactMade": { "type": "boolean", "example": false },
+          "checkMemo": { "type": "object", "example": "연락 시도했으나 부재" }
+        },
+        "required": ["studentId", "date", "checked", "contactMade"]
+      },
+      "UpsertSubmissionDto": {
+        "type": "object",
+        "properties": {
+          "assignmentId": {
+            "type": "string",
+            "example": "b7e61e3c-8c2e-4c9e-9e1e-123456789abc"
+          },
+          "studentId": { "type": "string", "example": "LMS_STUDENT_0001" },
+          "status": {
+            "type": "string",
+            "enum": ["NOT_STARTED", "IN_PROGRESS", "DONE", "HOLD"],
+            "example": "DONE"
+          },
+          "reason": { "type": "string", "example": "컨디션 난조" },
+          "scheduleNote": { "type": "string", "example": "2/20까지 보충 예정" }
+        },
+        "required": ["assignmentId", "studentId", "status"]
+      },
+      "CreateFeedbackDto": {
+        "type": "object",
+        "properties": {
+          "studentId": { "type": "string", "example": "student_123" },
+          "assignmentId": {
+            "type": "string",
+            "example": "a09a4529-5e30-49b7-80c4-142313d8a2df"
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 250,
+            "example": "오늘 과제 수행이 좋아요. 다음 단계로 넘어가도 됩니다."
+          }
+        },
+        "required": ["studentId", "content"]
+      },
+      "CreateReportDto": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "description": "학생 UUID",
+            "example": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "세션 UUID",
+            "example": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+          },
+          "fromAt": {
+            "type": "string",
+            "description": "리포트 커버 시작(ISO)",
+            "example": "2026-03-01T00:00:00.000Z"
+          },
+          "toAt": {
+            "type": "string",
+            "description": "리포트 커버 끝(ISO)",
+            "example": "2026-03-07T23:59:59.999Z"
+          },
+          "summary": { "type": "string", "description": "요약 텍스트" },
+          "analysis": {
+            "type": "object",
+            "description": "AI 분석 결과(JSON)",
+            "additionalProperties": true
+          }
+        },
+        "required": ["studentId", "fromAt", "toAt", "summary"]
+      },
+      "SaveReportResultDto": {
+        "type": "object",
+        "properties": {
+          "resultUrl": {
+            "type": "string",
+            "example": "https://.../report.pdf"
+          },
+          "fileId": { "type": "string", "example": "file_123" }
+        }
+      }
+    }
+  }
+}

@@ -17,11 +17,11 @@ paths:
             schema:
               $ref: ./components.yaml#/components/schemas/UpsertDailyCheckDto
       responses:
-        "201":
+        '201':
           description: Upserted daily check
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
 
     get:
@@ -45,9 +45,9 @@ paths:
           required: false
           schema: { type: string, example: student_123 }
       responses:
-        "200":
+        '200':
           description: Daily check list
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden

@@ -17,11 +17,11 @@ paths:
             schema:
               $ref: ./components.yaml#/components/schemas/CreateTaskAssignmentDto
       responses:
-        "201":
+        '201':
           description: Created TASK assignment
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
 
     get:
@@ -38,20 +38,22 @@ paths:
         - name: sessionId
           in: query
           required: false
-          schema: { type: string, example: 64aedc13-27eb-41c1-aee8-89694b6aa04d }
+          schema:
+            { type: string, example: 64aedc13-27eb-41c1-aee8-89694b6aa04d }
         - name: studentId
           in: query
           required: false
-          schema: { type: string, example: 33333333-3333-3333-3333-333333333333 }
+          schema:
+            { type: string, example: 33333333-3333-3333-3333-333333333333 }
         - name: date
           in: query
           required: false
           description: yyyy-mm-dd
           schema: { type: string, example: 2026-02-16 }
       responses:
-        "200":
+        '200':
           description: TASK assignment list
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
 
   /api/v1/passion-load/assignments/{id}:
@@ -69,11 +71,11 @@ paths:
           description: Assignment UUID
           schema: { type: string }
       responses:
-        "200":
+        '200':
           description: TASK assignment
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
-        "404":
+        '404':
           $ref: ./components.yaml#/components/responses/NotFound
 
     patch:
@@ -99,9 +101,9 @@ paths:
             schema:
               $ref: ./components.yaml#/components/schemas/UpdateTaskAssignmentDto
       responses:
-        "200":
+        '200':
           description: Updated TASK assignment
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
-        "404":
+        '404':
           $ref: ./components.yaml#/components/responses/NotFound

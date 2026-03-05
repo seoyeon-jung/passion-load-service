@@ -16,11 +16,11 @@ paths:
             schema:
               $ref: ./components.yaml#/components/schemas/CreateFeedbackDto
       responses:
-        "201":
+        '201':
           description: Created feedback
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
 
     get:
@@ -41,11 +41,12 @@ paths:
         - name: assignmentId
           in: query
           required: false
-          schema: { type: string, example: a09a4529-5e30-49b7-80c4-142313d8a2df }
+          schema:
+            { type: string, example: a09a4529-5e30-49b7-80c4-142313d8a2df }
       responses:
-        "200":
+        '200':
           description: Feedback list
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden

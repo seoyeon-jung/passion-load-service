@@ -17,15 +17,15 @@ paths:
             schema:
               $ref: ./components.yaml#/components/schemas/CreateSessionDto
       responses:
-        "201":
+        '201':
           description: 생성된 세션
           content:
             application/json:
               schema:
                 $ref: ./components.yaml#/components/schemas/SessionResponseDto
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
 
     get:
@@ -36,7 +36,7 @@ paths:
         - role: []
         - user: []
       responses:
-        "200":
+        '200':
           description: 세션 목록
           content:
             application/json:
@@ -44,7 +44,7 @@ paths:
                 type: array
                 items:
                   $ref: ./components.yaml#/components/schemas/SessionResponseDto
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
 
   /api/v1/passion-load/sessions/{id}:
@@ -63,17 +63,17 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 세션
           content:
             application/json:
               schema:
                 $ref: ./components.yaml#/components/schemas/SessionResponseDto
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
-        "404":
+        '404':
           $ref: ./components.yaml#/components/responses/NotFound
 
     patch:
@@ -100,17 +100,17 @@ paths:
             schema:
               $ref: ./components.yaml#/components/schemas/UpdateSessionDto
       responses:
-        "200":
+        '200':
           description: 수정된 세션
           content:
             application/json:
               schema:
                 $ref: ./components.yaml#/components/schemas/SessionResponseDto
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
-        "404":
+        '404':
           $ref: ./components.yaml#/components/responses/NotFound
 
   /api/v1/passion-load/sessions/{id}/status:
@@ -138,15 +138,15 @@ paths:
             schema:
               $ref: ./components.yaml#/components/schemas/UpdateSessionStatusDto
       responses:
-        "200":
+        '200':
           description: 수정된 세션
           content:
             application/json:
               schema:
                 $ref: ./components.yaml#/components/schemas/SessionResponseDto
-        "400":
+        '400':
           $ref: ./components.yaml#/components/responses/BadRequest
-        "403":
+        '403':
           $ref: ./components.yaml#/components/responses/Forbidden
-        "404":
+        '404':
           $ref: ./components.yaml#/components/responses/NotFound
