@@ -34,8 +34,8 @@ export type ListReportsQuery = {
   sessionId?: string;
   status?: ReportStatus;
 
-  from?: Date;
-  to?: Date;
+  fromAt?: Date;
+  toAt?: Date;
 };
 
 export interface ReportRepositoryPort {

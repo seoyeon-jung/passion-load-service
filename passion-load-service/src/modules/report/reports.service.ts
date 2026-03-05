@@ -55,8 +55,8 @@ export class ReportsService {
     const hasAny =
       !!query.studentId ||
       !!query.sessionId ||
-      !!query.from ||
-      !!query.to ||
+      !!query.fromAt ||
+      !!query.toAt ||
       !!query.status;
 
     if (!hasAny) {
@@ -65,22 +65,22 @@ export class ReportsService {
       );
     }
 
-    const from = query.from ? new Date(query.from) : undefined;
-    const to = query.to ? new Date(query.to) : undefined;
+    const fromAt = query.fromAt ? new Date(query.fromAt) : undefined;
+    const toAt = query.toAt ? new Date(query.toAt) : undefined;
 
-    if (from && Number.isNaN(from.getTime()))
+    if (fromAt && Number.isNaN(fromAt.getTime()))
       throw new BadRequestException('invalid from');
-    if (to && Number.isNaN(to.getTime()))
+    if (toAt && Number.isNaN(toAt.getTime()))
       throw new BadRequestException('invalid to');
-    if (from && to && from.getTime() > to.getTime())
+    if (fromAt && toAt && fromAt.getTime() > toAt.getTime())
       throw new BadRequestException('from must be <= to');
 
     return this.reportRepo.list({
       orgId,
       studentId: query.studentId,
       sessionId: query.sessionId,
-      from,
-      to,
+      fromAt,
+      toAt,
       status: query.status,
     });
   }

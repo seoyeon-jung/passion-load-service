@@ -1,10 +1,9 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-  displayName: 'passion-load-service',
+  displayName: 'passion-load-service-api',
   testEnvironment: 'node',
-  testMatch: ['<rootDir>/src/modules/**/*.spec.ts'],
-  testPathIgnorePatterns: ['<rootDir>/src/test/'],
+  testMatch: ['<rootDir>/src/test/**/*.api.spec.ts'],
   transform: {
     '^.+\\.(t|j)s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.app.json' }],
   },
