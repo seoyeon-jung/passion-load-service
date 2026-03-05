@@ -30,7 +30,7 @@ jobs:
       - run: npx nx format:check --base="origin/main"
 
       # Build & test (start simple)
-      - run: npx nx run-many -t build test --all
+      - run: npx nx run-many -t build test --all --exclude=@org/source
 
       # Lint & typecheck (optional but recommended)
       - run: npx nx run-many -t lint typecheck --all
