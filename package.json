@@ -8,7 +8,8 @@
     "prisma:generate": "prisma generate --config=prisma.config.ts",
     "prisma:copy-runtime": "node tools/scripts/copy-prisma-runtime.js",
     "dev:service": "npm run prisma:generate && nx serve @org/passion-load-service",
-"test:api": "DATABASE_URL=\"postgresql://postgres:postgres@127.0.0.1:5433/passion_load_test?schema=public\" prisma migrate deploy && nx run @org/passion-load-service:test-api"  },
+    "test:api": "DATABASE_URL=\"postgresql://postgres:postgres@127.0.0.1:5433/passion_load_test?schema=public\" prisma migrate deploy && nx run @org/passion-load-service:test-api"
+  },
   "private": true,
   "devDependencies": {
     "@nestjs/schematics": "^11.0.0",

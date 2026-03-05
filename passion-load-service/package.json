@@ -82,6 +82,18 @@
         ],
         "options": {
           "jestConfig": "passion-load-service/jest.config.ts",
+          "runInBand": true,
+          "passWithNoTests": true
+        }
+      },
+      "test-api": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{workspaceRoot}/coverage/passion-load-service-api"
+        ],
+        "options": {
+          "jestConfig": "passion-load-service/jest.api.config.ts",
+          "runInBand": true,
           "passWithNoTests": true
         }
       }
