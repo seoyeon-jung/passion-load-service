@@ -1,0 +1,14 @@
+{
+  "sourceRoot": "passion-load-service/src",
+  "projectType": "application",
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/passion-load-service"],
+      "options": {
+        "jestConfig": "passion-load-service/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}
