@@ -3,10 +3,11 @@ import { Module } from '@nestjs/common';
 import { AssignmentsController } from './adapters/in/assignments.controller';
 import { DailyChecksController } from './adapters/in/daily-checks.controller';
 import { TaskService } from './task.service';
+import { DailyCheckService } from './daily-check.service';
 
 @Module({
   imports: [PersistenceModule],
   controllers: [AssignmentsController, DailyChecksController],
-  providers: [TaskService, DailyChecksController],
+  providers: [TaskService, DailyCheckService],
 })
 export class AssignmentModule {}

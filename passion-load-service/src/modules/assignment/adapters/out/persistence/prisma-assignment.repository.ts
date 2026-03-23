@@ -8,6 +8,9 @@ import type {
   CreateTaskInput,
   UpdateTaskInput,
   UpsertDailyCheckInput,
+  Task,
+  DailyCheck,
+  DailyAssignment,
 } from '../../../ports/assignment.repository.port';
 import {
   toDomainAssignment,
@@ -19,7 +22,7 @@ import {
 export class PrismaAssignmentRepository implements AssignmentRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createTask(input: CreateTaskInput) {
+  async createTask(input: CreateTaskInput): Promise<Task> {
     const row = await this.prisma.dailyAssignment.create({
       data: {
         id: input.id,
@@ -48,10 +51,10 @@ export class PrismaAssignmentRepository implements AssignmentRepositoryPort {
       },
     });
 
-    return toDomainAssignment(row);
+    return toDomainAssignment(row) as Task;
   }
 
-  async updateTask(id: string, input: UpdateTaskInput) {
+  async updateTask(id: string, input: UpdateTaskInput): Promise<Task> {
     const row = await this.prisma.dailyAssignment.update({
       where: { id },
       data: {
@@ -68,10 +71,10 @@ export class PrismaAssignmentRepository implements AssignmentRepositoryPort {
       },
     });
 
-    return toDomainAssignment(row);
+    return toDomainAssignment(row) as Task;
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<DailyAssignment | null> {
     const row = await this.prisma.dailyAssignment.findUnique({ where: { id } });
     return row ? toDomainAssignment(row) : null;
   }
@@ -81,8 +84,8 @@ export class PrismaAssignmentRepository implements AssignmentRepositoryPort {
     studentId?: string;
     sessionId?: string;
     date?: string;
-    type?: AssignmentType;
-  }) {
+    type?: 'TASK' | 'DAILY_CHECK';
+  }): Promise<DailyAssignment[]> {
     const where: Prisma.DailyAssignmentWhereInput = {
       organizationId: filter.orgId,
       ...(filter.studentId ? { studentId: filter.studentId } : {}),
@@ -103,7 +106,7 @@ export class PrismaAssignmentRepository implements AssignmentRepositoryPort {
     return rows.map(toDomainAssignment);
   }
 
-  async upsertDailyCheck(input: UpsertDailyCheckInput) {
+  async upsertDailyCheck(input: UpsertDailyCheckInput): Promise<DailyCheck> {
     const assignmentDate = toPrismaAssignmentDate(input.assignmentDate);
 
     const row = await this.prisma.$transaction(
@@ -134,7 +137,6 @@ export class PrismaAssignmentRepository implements AssignmentRepositoryPort {
               contactMade: input.contactMade,
               checkMemo: input.checkMemo ?? null,
 
-              // TASK 필드들은 null로
               title: null,
               body: null,
               dueAt: null,
@@ -154,6 +156,6 @@ export class PrismaAssignmentRepository implements AssignmentRepositoryPort {
       }
     );
 
-    return toDomainAssignment(row);
+    return toDomainAssignment(row) as DailyCheck;
   }
 }
