@@ -1,6 +1,6 @@
 import {
-  ASSIGNMENT_REPOSITORY,
   FEEDBACK_REPOSITORY,
+  TASK_REPOSITORY,
 } from '@modules/persistence.tokens';
 import {
   BadRequestException,
@@ -9,20 +9,20 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import type { FeedbackRepositoryPort } from './ports/feedback.repository.port';
-import type { AssignmentRepositoryPort } from '@modules/assignment/ports/assignment.repository.port';
 import {
   CreateFeedbackDto,
   ListFeedbackQueryDto,
 } from './adapters/in/feedback.dto';
 import { randomUUID } from 'crypto';
+import type { TaskRepositoryPort } from '@modules/assignment/ports/assignment.repository.port';
 
 @Injectable()
 export class FeedbacksService {
   constructor(
     @Inject(FEEDBACK_REPOSITORY)
     private readonly feedbackRepo: FeedbackRepositoryPort,
-    @Inject(ASSIGNMENT_REPOSITORY)
-    private readonly assignmentRepo: AssignmentRepositoryPort
+    @Inject(TASK_REPOSITORY)
+    private readonly assignmentRepo: TaskRepositoryPort
   ) {}
 
   async create(
