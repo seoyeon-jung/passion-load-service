@@ -28,7 +28,7 @@ import {
   ListTaskAssignmentsQueryDto,
   UpdateTaskAssignmentDto,
 } from './assignments.dto';
-import { AssignmentService } from '@modules/assignment/assignments.service';
+import { TaskService } from '@modules/assignment/task.service';
 
 @ApiTags('assignments')
 @ApiSecurity('org')
@@ -37,7 +37,7 @@ import { AssignmentService } from '@modules/assignment/assignments.service';
 @UseGuards(RolesGuard)
 @Controller('/api/v1/passion-load/assignments')
 export class AssignmentsController {
-  constructor(private readonly service: AssignmentService) {}
+  constructor(private readonly service: TaskService) {}
 
   @ApiOperation({ summary: 'Create TASK assignment' })
   @ApiCreatedResponse({ description: 'Created TASK assignment' })
