@@ -1,38 +1,37 @@
 import { Test } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { AssignmentService } from './assignments.service';
 import {
   ASSIGNMENT_REPOSITORY,
   SESSION_REPOSITORY,
 } from '@modules/persistence.tokens';
 import { AssignmentType } from '@common/types/enums';
+import { TaskService } from '@modules/assignment/task.service';
 
-describe('AssignmentService (UseCase unit)', () => {
+describe('TaskService (UseCase unit)', () => {
   const assignmentRepo = {
     createTask: jest.fn(),
     findById: jest.fn(),
     list: jest.fn(),
     updateTask: jest.fn(),
-    upsertDailyCheck: jest.fn(),
   };
 
   const sessionRepo = {
     findById: jest.fn(),
   };
 
-  let service: AssignmentService;
+  let service: TaskService;
 
   beforeEach(async () => {
     jest.resetAllMocks();
     const moduleRef = await Test.createTestingModule({
       providers: [
-        AssignmentService,
+        TaskService,
         { provide: ASSIGNMENT_REPOSITORY, useValue: assignmentRepo },
         { provide: SESSION_REPOSITORY, useValue: sessionRepo },
       ],
     }).compile();
 
-    service = moduleRef.get(AssignmentService);
+    service = moduleRef.get(TaskService);
   });
 
   it('createTask: session이 없거나 org 다르면 404', async () => {
@@ -73,12 +72,6 @@ describe('AssignmentService (UseCase unit)', () => {
     await expect(service.getTask('org1', 'a1')).rejects.toBeInstanceOf(
       NotFoundException
     );
-  });
-
-  it('listDailyChecks: date/studentId 둘 다 없으면 400', async () => {
-    await expect(
-      service.listDailyChecks('org1', {} as any)
-    ).rejects.toBeInstanceOf(BadRequestException);
   });
 
   it('listTasks: type=TASK로 list 호출', async () => {
