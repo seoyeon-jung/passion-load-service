@@ -71,18 +71,27 @@ export type UpsertDailyCheckInput = {
   checkMemo?: string | null;
 };
 
-export interface AssignmentRepositoryPort {
+export type TaskFilter = {
+  orgId: string;
+  studentId?: string;
+  sessionId?: string;
+  date?: string;
+};
+
+export type DailyCheckFilter = {
+  orgId: string;
+  studentId?: string;
+  date?: string;
+};
+export interface TaskRepositoryPort {
   createTask(input: CreateTaskInput): Promise<Task>;
   updateTask(id: string, input: UpdateTaskInput): Promise<Task>;
-  findById(id: string): Promise<DailyAssignment | null>;
+  findById(id: string): Promise<Task | null>;
+  listTasks(filter: TaskFilter): Promise<Task[]>;
+}
 
-  list(filter: {
-    orgId: string;
-    studentId?: string;
-    sessionId?: string;
-    date?: string;
-    type?: 'TASK' | 'DAILY_CHECK';
-  }): Promise<DailyAssignment[]>;
-
+export interface DailyCheckRepositoryPort {
   upsertDailyCheck(input: UpsertDailyCheckInput): Promise<DailyCheck>;
+  findById(id: string): Promise<DailyCheck | null>;
+  listDailyChecks(filter: DailyCheckFilter): Promise<DailyCheck[]>;
 }

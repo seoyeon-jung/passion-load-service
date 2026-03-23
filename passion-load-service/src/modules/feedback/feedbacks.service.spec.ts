@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import {
   FEEDBACK_REPOSITORY,
-  ASSIGNMENT_REPOSITORY,
+  TASK_REPOSITORY,
 } from '@modules/persistence.tokens';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { FeedbacksService } from './feedback.service';
@@ -24,7 +24,7 @@ describe('FeedbacksService (UseCase unit)', () => {
       providers: [
         FeedbacksService,
         { provide: FEEDBACK_REPOSITORY, useValue: feedbackRepo },
-        { provide: ASSIGNMENT_REPOSITORY, useValue: assignmentRepo },
+        { provide: TASK_REPOSITORY, useValue: assignmentRepo },
       ],
     }).compile();
 

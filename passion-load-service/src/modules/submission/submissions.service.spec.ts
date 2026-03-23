@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import {
-  ASSIGNMENT_REPOSITORY,
   SUBMISSION_REPOSITORY,
+  TASK_REPOSITORY,
 } from '@modules/persistence.tokens';
 import { AssignmentType } from '@common/types/enums';
 import { SubmissionService } from './submissions.service';
@@ -25,7 +25,7 @@ describe('SubmissionService (UseCase unit)', () => {
       providers: [
         SubmissionService,
         { provide: SUBMISSION_REPOSITORY, useValue: submissionRepo },
-        { provide: ASSIGNMENT_REPOSITORY, useValue: assignmentRepo },
+        { provide: TASK_REPOSITORY, useValue: assignmentRepo },
       ],
     }).compile();
 

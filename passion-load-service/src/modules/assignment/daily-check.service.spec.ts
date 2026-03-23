@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
-import { ASSIGNMENT_REPOSITORY } from '@modules/persistence.tokens';
 import { DailyCheckService } from '@modules/assignment/daily-check.service';
+import { DAILY_CHECK_REPOSITORY } from '@modules/persistence.tokens';
 
 describe('DailyCheckService (UseCase unit)', () => {
   const assignmentRepo = {
@@ -16,7 +16,7 @@ describe('DailyCheckService (UseCase unit)', () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         DailyCheckService,
-        { provide: ASSIGNMENT_REPOSITORY, useValue: assignmentRepo },
+        { provide: DAILY_CHECK_REPOSITORY, useValue: assignmentRepo },
         // SESSION_REPOSITORY 없음 — DailyCheckService는 불필요
       ],
     }).compile();

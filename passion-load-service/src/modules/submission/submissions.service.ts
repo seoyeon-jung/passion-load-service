@@ -1,6 +1,6 @@
 import {
-  ASSIGNMENT_REPOSITORY,
   SUBMISSION_REPOSITORY,
+  TASK_REPOSITORY,
 } from '@modules/persistence.tokens';
 import {
   BadRequestException,
@@ -9,20 +9,20 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import type { SubmissionRepositoryPort } from './ports/submission.repository.port';
-import type { AssignmentRepositoryPort } from '@modules/assignment/ports/assignment.repository.port';
 import {
   ListSubmissionQueryDto,
   UpsertSubmissionDto,
 } from './adapters/in/submissions.dto';
 import { AssignmentType } from '@common/types/enums';
+import type { TaskRepositoryPort } from '@modules/assignment/ports/assignment.repository.port';
 
 @Injectable()
 export class SubmissionService {
   constructor(
     @Inject(SUBMISSION_REPOSITORY)
     private readonly submissions: SubmissionRepositoryPort,
-    @Inject(ASSIGNMENT_REPOSITORY)
-    private readonly assignments: AssignmentRepositoryPort
+    @Inject(TASK_REPOSITORY)
+    private readonly assignments: TaskRepositoryPort
   ) {}
 
   async upsert(orgId: string, dto: UpsertSubmissionDto) {

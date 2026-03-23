@@ -10,27 +10,32 @@ import {
 
 import {
   SESSION_REPOSITORY,
-  ASSIGNMENT_REPOSITORY,
   SUBMISSION_REPOSITORY,
   FEEDBACK_REPOSITORY,
   REPORT_REPOSITORY,
+  TASK_REPOSITORY,
+  DAILY_CHECK_REPOSITORY,
 } from './persistence.tokens';
 
 import type { SessionRepositoryPort } from './session/ports/session.repository.port';
-import type { AssignmentRepositoryPort } from './assignment/ports/assignment.repository.port';
 import type { SubmissionRepositoryPort } from './submission/ports/submission.repository.port';
 import type { FeedbackRepositoryPort } from './feedback/ports/feedback.repository.port';
 import type { ReportRepositoryPort } from './report/ports/report.repository.port';
 
-import { AssignmentType } from '@common/types/enums';
+import type {
+  DailyCheckRepositoryPort,
+  TaskRepositoryPort,
+} from './assignment/ports/assignment.repository.port';
 
 @Controller('/debug')
 export class DebugController {
   constructor(
     @Inject(SESSION_REPOSITORY)
     private readonly sessions: SessionRepositoryPort,
-    @Inject(ASSIGNMENT_REPOSITORY)
-    private readonly assignments: AssignmentRepositoryPort,
+    @Inject(TASK_REPOSITORY)
+    private readonly tasks: TaskRepositoryPort,
+    @Inject(DAILY_CHECK_REPOSITORY)
+    private readonly dailyChecks: DailyCheckRepositoryPort,
     @Inject(SUBMISSION_REPOSITORY)
     private readonly submissions: SubmissionRepositoryPort,
     @Inject(FEEDBACK_REPOSITORY)
@@ -52,13 +57,13 @@ export class DebugController {
   // --- Assignment (TASK) ---
   @Post('/assignments/task')
   createTask(@Body() body: any) {
-    return this.assignments.createTask(body);
+    return this.tasks.createTask(body);
   }
 
   // --- Daily check upsert ---
   @Post('/assignments/daily-check')
   upsertDailyCheck(@Body() body: any) {
-    return this.assignments.upsertDailyCheck(body);
+    return this.dailyChecks.upsertDailyCheck(body);
   }
 
   @Get('/assignments')
@@ -67,9 +72,12 @@ export class DebugController {
     @Query('studentId') studentId?: string,
     @Query('sessionId') sessionId?: string,
     @Query('date') date?: string,
-    @Query('type') type?: AssignmentType
+    @Query('type') type?: 'TASK' | 'DAILY_CHECK'
   ) {
-    return this.assignments.list({ orgId, studentId, sessionId, date, type });
+    if (type === 'DAILY_CHECK') {
+      return this.dailyChecks.listDailyChecks({ orgId, studentId, date });
+    }
+    return this.tasks.listTasks({ orgId, studentId, sessionId, date });
   }
 
   // --- Submission ---

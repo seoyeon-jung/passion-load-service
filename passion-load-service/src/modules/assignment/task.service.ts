@@ -1,6 +1,6 @@
 import {
-  ASSIGNMENT_REPOSITORY,
   SESSION_REPOSITORY,
+  TASK_REPOSITORY,
 } from '@modules/persistence.tokens';
 import {
   BadRequestException,
@@ -9,8 +9,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import type {
-  AssignmentRepositoryPort,
   CreateTaskInput,
+  TaskRepositoryPort,
   UpdateTaskInput,
 } from './ports/assignment.repository.port';
 import type { SessionRepositoryPort } from '@modules/session/ports/session.repository.port';
@@ -26,8 +26,8 @@ import { AssignmentType } from '@common/types/enums';
 @Injectable()
 export class TaskService {
   constructor(
-    @Inject(ASSIGNMENT_REPOSITORY)
-    private readonly assignments: AssignmentRepositoryPort,
+    @Inject(TASK_REPOSITORY)
+    private readonly assignments: TaskRepositoryPort,
     @Inject(SESSION_REPOSITORY)
     private readonly sessions: SessionRepositoryPort
   ) {}
@@ -72,9 +72,8 @@ export class TaskService {
   }
 
   async listTasks(orgId: string, query: ListTaskAssignmentsQueryDto) {
-    return this.assignments.list({
+    return this.assignments.listTasks({
       orgId,
-      type: AssignmentType.TASK,
       studentId: query.studentId,
       sessionId: query.sessionId,
       date: query.date,

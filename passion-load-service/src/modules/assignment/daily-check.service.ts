@@ -1,18 +1,17 @@
-import { ASSIGNMENT_REPOSITORY } from '@modules/persistence.tokens';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import type { AssignmentRepositoryPort } from './ports/assignment.repository.port';
 import { randomUUID } from 'crypto';
-import { AssignmentType } from '@common/types/enums';
 import {
   ListDailyChecksQueryDto,
   UpsertDailyCheckDto,
 } from './adapters/in/daily-checks.dto';
+import { DAILY_CHECK_REPOSITORY } from '@modules/persistence.tokens';
+import type { DailyCheckRepositoryPort } from './ports/assignment.repository.port';
 
 @Injectable()
 export class DailyCheckService {
   constructor(
-    @Inject(ASSIGNMENT_REPOSITORY)
-    private readonly assignments: AssignmentRepositoryPort
+    @Inject(DAILY_CHECK_REPOSITORY)
+    private readonly assignments: DailyCheckRepositoryPort
   ) {}
 
   async upsertDailyCheck(orgId: string, dto: UpsertDailyCheckDto) {
@@ -34,9 +33,8 @@ export class DailyCheckService {
       );
     }
 
-    return this.assignments.list({
+    return this.assignments.listDailyChecks({
       orgId,
-      type: AssignmentType.DAILY_CHECK,
       date: query.date,
       studentId: query.studentId,
     });
