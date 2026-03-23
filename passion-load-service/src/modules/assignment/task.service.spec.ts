@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import {
-  ASSIGNMENT_REPOSITORY,
   SESSION_REPOSITORY,
+  TASK_REPOSITORY,
 } from '@modules/persistence.tokens';
 import { AssignmentType } from '@common/types/enums';
 import { TaskService } from '@modules/assignment/task.service';
@@ -11,7 +11,7 @@ describe('TaskService (UseCase unit)', () => {
   const assignmentRepo = {
     createTask: jest.fn(),
     findById: jest.fn(),
-    list: jest.fn(),
+    listTasks: jest.fn(),
     updateTask: jest.fn(),
   };
 
@@ -26,7 +26,7 @@ describe('TaskService (UseCase unit)', () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         TaskService,
-        { provide: ASSIGNMENT_REPOSITORY, useValue: assignmentRepo },
+        { provide: TASK_REPOSITORY, useValue: assignmentRepo },
         { provide: SESSION_REPOSITORY, useValue: sessionRepo },
       ],
     }).compile();
@@ -75,14 +75,13 @@ describe('TaskService (UseCase unit)', () => {
   });
 
   it('listTasks: type=TASK로 list 호출', async () => {
-    assignmentRepo.list.mockResolvedValue([]);
+    assignmentRepo.listTasks.mockResolvedValue([]);
 
     await service.listTasks('org1', { studentId: 'stu1' } as any);
 
-    expect(assignmentRepo.list).toHaveBeenCalledWith(
+    expect(assignmentRepo.listTasks).toHaveBeenCalledWith(
       expect.objectContaining({
         orgId: 'org1',
-        type: AssignmentType.TASK,
         studentId: 'stu1',
       })
     );
