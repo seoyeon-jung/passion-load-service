@@ -84,9 +84,9 @@ describe('SubmissionService (UseCase unit)', () => {
   });
 
   it('list: 필터 없으면 400', async () => {
-    await expect(
-      service.list('org1', {} as any)
-    ).rejects.toBeInstanceOf(BadRequestException);
+    await expect(service.list('org1', {} as any)).rejects.toBeInstanceOf(
+      BadRequestException
+    );
   });
 
   it('list: 필터 있으면 submissions.list 호출', async () => {
