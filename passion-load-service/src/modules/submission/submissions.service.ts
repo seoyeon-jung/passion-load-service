@@ -1,40 +1,26 @@
 import {
+  ASSIGNMENT_USE_CASE,
   SUBMISSION_REPOSITORY,
-  TASK_REPOSITORY,
 } from '@modules/persistence.tokens';
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import type { SubmissionRepositoryPort } from './ports/submission.repository.port';
 import {
   ListSubmissionQueryDto,
   UpsertSubmissionDto,
 } from './adapters/in/submissions.dto';
-import { AssignmentType } from '@common/types/enums';
-import type { TaskRepositoryPort } from '@modules/assignment/ports/assignment.repository.port';
+import type { AssignmentUseCase } from '@modules/assignment/ports/assignment.use-case';
 
 @Injectable()
 export class SubmissionService {
   constructor(
     @Inject(SUBMISSION_REPOSITORY)
     private readonly submissions: SubmissionRepositoryPort,
-    @Inject(TASK_REPOSITORY)
-    private readonly assignments: TaskRepositoryPort
+    @Inject(ASSIGNMENT_USE_CASE)
+    private readonly assignmentUseCase: AssignmentUseCase
   ) {}
 
   async upsert(orgId: string, dto: UpsertSubmissionDto) {
-    const a = await this.assignments.findById(dto.assignmentId);
-    if (!a || a.orgId !== orgId)
-      throw new NotFoundException('assignment not found');
-
-    if (a.assignmentType !== AssignmentType.TASK) {
-      throw new BadRequestException(
-        'submission is allowed only for TASK assignments'
-      );
-    }
+    await this.assignmentUseCase.validateAssignment(orgId, dto.assignmentId);
 
     return this.submissions.upsert({
       orgId,

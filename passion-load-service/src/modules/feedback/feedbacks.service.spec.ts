@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import {
   FEEDBACK_REPOSITORY,
-  TASK_REPOSITORY,
+  ASSIGNMENT_USE_CASE,
 } from '@modules/persistence.tokens';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { FeedbacksService } from './feedback.service';
@@ -12,8 +12,8 @@ describe('FeedbacksService (UseCase unit)', () => {
     list: jest.fn(),
   };
 
-  const assignmentRepo = {
-    findById: jest.fn(),
+  const assignmentUseCase = {
+    validateAssignment: jest.fn(),
   };
 
   let service: FeedbacksService;
@@ -24,7 +24,7 @@ describe('FeedbacksService (UseCase unit)', () => {
       providers: [
         FeedbacksService,
         { provide: FEEDBACK_REPOSITORY, useValue: feedbackRepo },
-        { provide: TASK_REPOSITORY, useValue: assignmentRepo },
+        { provide: ASSIGNMENT_USE_CASE, useValue: assignmentUseCase },
       ],
     }).compile();
 
@@ -45,7 +45,10 @@ describe('FeedbacksService (UseCase unit)', () => {
   });
 
   it('assignmentId가 다른 org의 데이터면 실패', async () => {
-    assignmentRepo.findById.mockResolvedValue({ id: 'a1', orgId: 'other-org' });
+    assignmentUseCase.validateAssignment.mockRejectedValue(
+      // 변경
+      new NotFoundException('assignment not found')
+    );
 
     await expect(
       service.create('org1', 't1', {
@@ -57,7 +60,7 @@ describe('FeedbacksService (UseCase unit)', () => {
   });
 
   it('정상 생성', async () => {
-    assignmentRepo.findById.mockResolvedValue({ id: 'a1', orgId: 'org1' });
+    assignmentUseCase.validateAssignment.mockResolvedValue(undefined); // 변경
     feedbackRepo.create.mockResolvedValue({ id: 'f1' });
 
     const res = await service.create('org1', 't1', {

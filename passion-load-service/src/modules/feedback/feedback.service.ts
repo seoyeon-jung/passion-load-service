@@ -1,28 +1,23 @@
 import {
+  ASSIGNMENT_USE_CASE,
   FEEDBACK_REPOSITORY,
-  TASK_REPOSITORY,
 } from '@modules/persistence.tokens';
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import type { FeedbackRepositoryPort } from './ports/feedback.repository.port';
 import {
   CreateFeedbackDto,
   ListFeedbackQueryDto,
 } from './adapters/in/feedback.dto';
 import { randomUUID } from 'crypto';
-import type { TaskRepositoryPort } from '@modules/assignment/ports/assignment.repository.port';
+import type { AssignmentUseCase } from '@modules/assignment/ports/assignment.use-case';
 
 @Injectable()
 export class FeedbacksService {
   constructor(
     @Inject(FEEDBACK_REPOSITORY)
     private readonly feedbackRepo: FeedbackRepositoryPort,
-    @Inject(TASK_REPOSITORY)
-    private readonly assignmentRepo: TaskRepositoryPort
+    @Inject(ASSIGNMENT_USE_CASE)
+    private readonly assignmentUseCase: AssignmentUseCase
   ) {}
 
   async create(
@@ -36,9 +31,7 @@ export class FeedbacksService {
       throw new BadRequestException('content must be <= 250 length');
 
     if (dto.assignmentId) {
-      const a = await this.assignmentRepo.findById(dto.assignmentId);
-      if (!a || a.orgId !== orgId)
-        throw new NotFoundException('assignment not found');
+      await this.assignmentUseCase.validateAssignment(orgId, dto.assignmentId);
     }
 
     return this.feedbackRepo.create({
