@@ -2,9 +2,8 @@ import { Test } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import {
   SUBMISSION_REPOSITORY,
-  TASK_REPOSITORY,
+  ASSIGNMENT_USE_CASE,
 } from '@modules/persistence.tokens';
-import { AssignmentType } from '@common/types/enums';
 import { SubmissionService } from './submissions.service';
 
 describe('SubmissionService (UseCase unit)', () => {
@@ -13,8 +12,8 @@ describe('SubmissionService (UseCase unit)', () => {
     list: jest.fn(),
   };
 
-  const assignmentRepo = {
-    findById: jest.fn(),
+  const assignmentUseCase = {
+    validateAssignment: jest.fn(),
   };
 
   let service: SubmissionService;
@@ -25,7 +24,7 @@ describe('SubmissionService (UseCase unit)', () => {
       providers: [
         SubmissionService,
         { provide: SUBMISSION_REPOSITORY, useValue: submissionRepo },
-        { provide: TASK_REPOSITORY, useValue: assignmentRepo },
+        { provide: ASSIGNMENT_USE_CASE, useValue: assignmentUseCase },
       ],
     }).compile();
 
@@ -33,7 +32,9 @@ describe('SubmissionService (UseCase unit)', () => {
   });
 
   it('upsert: assignment가 없거나 org 다르면 404', async () => {
-    assignmentRepo.findById.mockResolvedValue(null);
+    assignmentUseCase.validateAssignment.mockRejectedValue(
+      new NotFoundException('assignment not found')
+    );
 
     await expect(
       service.upsert('org1', {
@@ -45,11 +46,9 @@ describe('SubmissionService (UseCase unit)', () => {
   });
 
   it('upsert: TASK가 아닌 assignment면 400', async () => {
-    assignmentRepo.findById.mockResolvedValue({
-      id: 'a1',
-      orgId: 'org1',
-      assignmentType: AssignmentType.DAILY_CHECK,
-    });
+    assignmentUseCase.validateAssignment.mockRejectedValue(
+      new BadRequestException('submission is allowed only for TASK assignments')
+    );
 
     await expect(
       service.upsert('org1', {
@@ -61,11 +60,7 @@ describe('SubmissionService (UseCase unit)', () => {
   });
 
   it('upsert: 정상 호출 시 submissions.upsert 실행', async () => {
-    assignmentRepo.findById.mockResolvedValue({
-      id: 'a1',
-      orgId: 'org1',
-      assignmentType: AssignmentType.TASK,
-    });
+    assignmentUseCase.validateAssignment.mockResolvedValue(undefined);
     submissionRepo.upsert.mockResolvedValue({ id: 's1' });
 
     await service.upsert('org1', {
