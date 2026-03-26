@@ -1,1 +1,1 @@
-export const LMS_CLIENT = 'LMS_CLIENT';
+export const LMS_CLIENT = Symbol('LMS_CLIENT');
