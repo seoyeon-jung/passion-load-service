@@ -71,6 +71,17 @@ export class TaskService {
     return found;
   }
 
+  async validateAssignment(orgId: string, assignmentId: string): Promise<void> {
+    const found = await this.assignments.findById(assignmentId);
+    if (!found || found.orgId !== orgId)
+      throw new NotFoundException('assignment not found');
+
+    if (found.assignmentType !== AssignmentType.TASK)
+      throw new BadRequestException(
+        'submission is allowed only for TASK assignments'
+      );
+  }
+
   async listTasks(orgId: string, query: ListTaskAssignmentsQueryDto) {
     return this.assignments.listTasks({
       orgId,
