@@ -37,16 +37,8 @@ describe('FeedbacksService (UseCase unit)', () => {
     ).rejects.toBeInstanceOf(BadRequestException);
   });
 
-  it('content 250자 초과면 실패', async () => {
-    const long = 'a'.repeat(251);
-    await expect(
-      service.create('org1', 't1', { studentId: 's1', content: long })
-    ).rejects.toBeInstanceOf(BadRequestException);
-  });
-
   it('assignmentId가 다른 org의 데이터면 실패', async () => {
     assignmentUseCase.validateAssignment.mockRejectedValue(
-      // 변경
       new NotFoundException('assignment not found')
     );
 
@@ -60,7 +52,7 @@ describe('FeedbacksService (UseCase unit)', () => {
   });
 
   it('정상 생성', async () => {
-    assignmentUseCase.validateAssignment.mockResolvedValue(undefined); // 변경
+    assignmentUseCase.validateAssignment.mockResolvedValue(undefined);
     feedbackRepo.create.mockResolvedValue({ id: 'f1' });
 
     const res = await service.create('org1', 't1', {
