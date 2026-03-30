@@ -27,9 +27,6 @@ export class FeedbacksService {
   ) {
     if (!teacherId) throw new BadRequestException('teacherId is required');
 
-    if (dto.content.length > 250)
-      throw new BadRequestException('content must be <= 250 length');
-
     if (dto.assignmentId) {
       await this.assignmentUseCase.validateAssignment(orgId, dto.assignmentId);
     }

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateFeedbackDto {
   @ApiProperty({ example: 'student_123' })
@@ -12,11 +12,9 @@ export class CreateFeedbackDto {
   assignmentId?: string;
 
   @ApiProperty({
-    maxLength: 250,
     example: '오늘 과제 수행이 좋아요. 다음 단계로 넘어가도 됩니다.',
   })
   @IsString()
-  @MaxLength(250)
   content!: string;
 }
 
