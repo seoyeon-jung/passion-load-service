@@ -13,9 +13,11 @@ import {
   SUBMISSION_REPOSITORY,
   FEEDBACK_REPOSITORY,
   REPORT_REPOSITORY,
+  STUDENT_NOTE_REPOSITORY,
 } from './persistence.tokens';
 import { PrismaTaskRepository } from './assignment/adapters/out/persistence/prisma-task.repository';
 import { PrismaDailyCheckRepository } from './assignment/adapters/out/persistence/prisma-daily-check.repository';
+import { PrismaStudentNoteRepository } from './student-note/adapters/out/persistence/prisma-student-note.repository';
 
 @Module({
   imports: [PrismaModule],
@@ -26,6 +28,7 @@ import { PrismaDailyCheckRepository } from './assignment/adapters/out/persistenc
     { provide: SUBMISSION_REPOSITORY, useClass: PrismaSubmissionRepository },
     { provide: FEEDBACK_REPOSITORY, useClass: PrismaFeedbackRepository },
     { provide: REPORT_REPOSITORY, useClass: PrismaReportRepository },
+    { provide: STUDENT_NOTE_REPOSITORY, useClass: PrismaStudentNoteRepository },
   ],
   exports: [
     SESSION_REPOSITORY,
@@ -34,6 +37,7 @@ import { PrismaDailyCheckRepository } from './assignment/adapters/out/persistenc
     SUBMISSION_REPOSITORY,
     FEEDBACK_REPOSITORY,
     REPORT_REPOSITORY,
+    STUDENT_NOTE_REPOSITORY,
   ],
 })
 export class PersistenceModule {}
