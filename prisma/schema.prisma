@@ -181,3 +181,20 @@ model Report {
   @@index([sessionId])
   @@map("reports")
 }
+
+model StudentNote {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @map("organization_id") @db.Uuid
+  studentId      String   @map("student_id")
+  noteDate       DateTime @map("note_date") @db.Date
+  content        String   @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([organizationId, studentId, noteDate]) // upsert 키
+  @@index([organizationId])
+  @@index([organizationId, studentId])
+  @@index([studentId, noteDate])
+  @@map("student_notes")
+}
